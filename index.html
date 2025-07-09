@@ -1,25 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python Lernkarten (Lokal gespeichert)</title>
+    <title>Python Lernkarten (Exportierbar)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .fira-code {
-            font-family: 'Fira Code', monospace;
-        }
-        .modal-backdrop {
-            transition: opacity 0.3s ease;
-        }
-        .modal-content {
-            transition: transform 0.3s ease;
-        }
+        body { font-family: 'Inter', sans-serif; }
+        .fira-code { font-family: 'Fira Code', monospace; }
+        .modal-backdrop { transition: opacity 0.3s ease; }
+        .modal-content { transition: transform 0.3s ease; }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #1f2937; }
         ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
@@ -32,22 +23,25 @@
     <aside class="w-full md:w-1/4 lg:w-1/5 bg-gray-800 h-1/3 md:h-full flex flex-col border-r border-gray-700">
         <div class="p-4 border-b border-gray-700">
             <h1 class="text-xl font-bold">Python Lernkarten</h1>
-            <p id="storageInfo" class="text-xs text-gray-400 mt-1 truncate" title="Ihre Daten werden sicher im lokalen Speicher Ihres Browsers abgelegt.">Lokal gespeichert</p>
+            <p id="storageInfo" class="text-xs text-gray-400 mt-1 truncate" title="Änderungen werden durch Herunterladen einer neuen Datei gespeichert.">Änderungen exportieren</p>
         </div>
         <div class="flex-grow overflow-y-auto p-2">
             <h2 class="text-lg font-semibold p-2 text-gray-300">Kapitel</h2>
             <ul id="chapterList">
-                <!-- Chapters will be loaded here -->
+                <!-- Chapters will be loaded here by JavaScript -->
             </ul>
         </div>
-        <div class="p-4 border-t border-gray-700">
+        <div class="p-4 border-t border-gray-700 space-y-2">
             <button id="addChapterBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200">
                 Neues Kapitel
+            </button>
+            <button id="saveFileBtn" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-2 px-4 rounded-md transition-colors duration-200">
+                💾 Als HTML speichern
             </button>
         </div>
     </aside>
 
-    <!-- Main Content (Cards) -->
+    <!-- Main Content (Cards) - HTML ist unverändert -->
     <main class="w-full md:w-3/4 lg:w-4/5 h-2/3 md:h-full flex flex-col p-4 sm:p-6 lg:p-8">
         <div class="flex-shrink-0 mb-4 flex justify-between items-center">
             <h2 id="main-header" class="text-2xl font-bold text-gray-200">Lernkarten</h2>
@@ -96,71 +90,31 @@
         </div>
     </main>
 
-    <!-- Modals (HTML unchanged) -->
-    <div id="addChapterModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-        <div class="modal-backdrop absolute inset-0 bg-black bg-opacity-70 opacity-0"></div>
-        <div class="modal-content bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6 transform opacity-0 scale-95">
-            <h3 class="text-xl font-semibold mb-4">Neues Kapitel erstellen</h3>
-            <input type="text" id="newChapterName" placeholder="Name des Kapitels" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <div class="flex justify-end mt-6 space-x-3">
-                <button id="cancelChapterBtn" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md">Abbrechen</button>
-                <button id="saveChapterBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-md">Speichern</button>
-            </div>
-        </div>
-    </div>
-    <div id="addCardModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-        <div class="modal-backdrop absolute inset-0 bg-black bg-opacity-70 opacity-0"></div>
-        <div class="modal-content bg-gray-800 rounded-lg shadow-xl w-full max-w-lg p-6 transform opacity-0 scale-95">
-            <h3 class="text-xl font-semibold mb-4">Neue Lernkarte erstellen</h3>
-            <div class="space-y-4">
-                <div>
-                    <label for="newCardQuestion" class="block text-sm font-medium text-gray-300 mb-1">Aufgabe / Frage</label>
-                    <textarea id="newCardQuestion" rows="3" placeholder="z.B. 'Schreibe eine Funktion...'" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                </div>
-                <div>
-                    <label for="newCardAnswer" class="block text-sm font-medium text-gray-300 mb-1">Antwort (Python Code)</label>
-                    <textarea id="newCardAnswer" rows="6" placeholder="def add(a, b): ..." class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 fira-code"></textarea>
-                </div>
-            </div>
-            <div class="flex justify-end mt-6 space-x-3">
-                <button id="cancelCardBtn" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md">Abbrechen</button>
-                <button id="saveCardBtn" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md">Speichern</button>
-            </div>
-        </div>
-    </div>
-    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center hidden">
-        <div class="modal-backdrop absolute inset-0 bg-black bg-opacity-70 opacity-0"></div>
-        <div class="modal-content bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6 transform opacity-0 scale-95">
-            <h3 id="confirmTitle" class="text-xl font-semibold mb-2">Aktion bestätigen</h3>
-            <p id="confirmMessage" class="text-gray-300 mb-6">Möchten Sie dies wirklich tun?</p>
-            <div class="flex justify-end mt-6 space-x-3">
-                <button id="confirmCancelBtn" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md">Abbrechen</button>
-                <button id="confirmOkBtn" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md">Bestätigen</button>
-            </div>
-        </div>
-    </div>
+    <!-- Modals (HTML unverändert) -->
+    <div id="addChapterModal" class="fixed inset-0 z-50 flex items-center justify-center hidden"> <div class="modal-backdrop absolute inset-0 bg-black bg-opacity-70 opacity-0"></div> <div class="modal-content bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6 transform opacity-0 scale-95"> <h3 class="text-xl font-semibold mb-4">Neues Kapitel erstellen</h3> <input type="text" id="newChapterName" placeholder="Name des Kapitels" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"> <div class="flex justify-end mt-6 space-x-3"> <button id="cancelChapterBtn" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md">Abbrechen</button> <button id="saveChapterBtn" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-md">Speichern</button> </div> </div> </div>
+    <div id="addCardModal" class="fixed inset-0 z-50 flex items-center justify-center hidden"> <div class="modal-backdrop absolute inset-0 bg-black bg-opacity-70 opacity-0"></div> <div class="modal-content bg-gray-800 rounded-lg shadow-xl w-full max-w-lg p-6 transform opacity-0 scale-95"> <h3 class="text-xl font-semibold mb-4">Neue Lernkarte erstellen</h3> <div class="space-y-4"> <div> <label for="newCardQuestion" class="block text-sm font-medium text-gray-300 mb-1">Aufgabe / Frage</label> <textarea id="newCardQuestion" rows="3" placeholder="z.B. 'Schreibe eine Funktion...'" class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea> </div> <div> <label for="newCardAnswer" class="block text-sm font-medium text-gray-300 mb-1">Antwort (Python Code)</label> <textarea id="newCardAnswer" rows="6" placeholder="def add(a, b): ..." class="w-full bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 fira-code"></textarea> </div> </div> <div class="flex justify-end mt-6 space-x-3"> <button id="cancelCardBtn" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md">Abbrechen</button> <button id="saveCardBtn" class="px-4 py-2 bg-green-600 hover:bg-green-500 rounded-md">Speichern</button> </div> </div> </div>
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center hidden"> <div class="modal-backdrop absolute inset-0 bg-black bg-opacity-70 opacity-0"></div> <div class="modal-content bg-gray-800 rounded-lg shadow-xl w-full max-w-md p-6 transform opacity-0 scale-95"> <h3 id="confirmTitle" class="text-xl font-semibold mb-2">Aktion bestätigen</h3> <p id="confirmMessage" class="text-gray-300 mb-6">Möchten Sie dies wirklich tun?</p> <div class="flex justify-end mt-6 space-x-3"> <button id="confirmCancelBtn" class="px-4 py-2 bg-gray-600 hover:bg-gray-500 rounded-md">Abbrechen</button> <button id="confirmOkBtn" class="px-4 py-2 bg-red-600 hover:bg-red-500 rounded-md">Bestätigen</button> </div> </div> </div>
 
-    <!-- No Firebase SDKs needed -->
     <script type="module">
-        // --- STATE MANAGEMENT ---
-        let appData = {};
+        // --- STATE MANAGEMENT & DATA ---
+        // Die Daten sind jetzt direkt hier im Code. 
+        // Wenn Sie die Datei speichern, wird dieser Teil überschrieben.
+        let appData = /*--DATA_PLACEHOLDER_START--*/{
+            "chapter-1672531200000": {
+                id: "chapter-1672531200000",
+                name: "Grundlagen",
+                cards: [
+                    { id: "card-1a", question: "Gib 'Hallo Welt' auf der Konsole aus.", answer: "print('Hallo Welt')" },
+                    { id: "card-1b", question: "Erstelle eine Variable `x` mit dem Wert 10.", answer: "x = 10" }
+                ]
+            }
+        }/*--DATA_PLACEHOLDER_END--*/;
+
         let currentChapterId = null;
         let unansweredCardIds = [];
         let currentCard = null;
         
-        // Default data if localStorage is empty
-        const defaultData = {
-            "chapter-1": {
-                id: "chapter-1",
-                name: "Grundlagen",
-                cards: [
-                    { id: "card-1a", question: "Gib 'Hallo Welt' aus.", answer: "print('Hallo Welt')" },
-                    { id: "card-1b", question: "Erstelle eine Variable `x` mit dem Wert 10.", answer: "x = 10" }
-                ]
-            }
-        };
-
-        // --- DOM ELEMENTS (mostly unchanged) ---
+        // --- DOM ELEMENTS (unverändert) ---
         const chapterList = document.getElementById('chapterList');
         const mainHeader = document.getElementById('main-header');
         const addCardBtn = document.getElementById('addCardBtn');
@@ -177,196 +131,169 @@
         const knowItAnywayBtn = document.getElementById('knowItAnywayBtn');
         const tryNextCardBtn = document.getElementById('tryNextCardBtn');
         const restartChapterBtn = document.getElementById('restartChapterBtn');
-
         const addChapterModal = document.getElementById('addChapterModal');
         const addCardModal = document.getElementById('addCardModal');
         const newChapterNameInput = document.getElementById('newChapterName');
         const newCardQuestionInput = document.getElementById('newCardQuestion');
         const newCardAnswerInput = document.getElementById('newCardAnswer');
 
-        // --- LOCALSTORAGE HELPER FUNCTIONS ---
-        function loadDataFromLocalStorage() {
-            const savedData = localStorage.getItem('pythonLernkarten');
-            if (savedData) {
-                appData = JSON.parse(savedData);
-            } else {
-                appData = defaultData; // Load default data if nothing is saved
-            }
+        // --- NEUE FUNKTION: Als Datei speichern ---
+        function saveToFile() {
+            // 1. Erstelle einen String aus dem aktuellen Datenobjekt
+            const dataAsString = JSON.stringify(appData, null, 4); // null, 4 für schöne Formatierung
+
+            // 2. Hole den kompletten HTML-Code der aktuellen Seite
+            const currentHtml = document.documentElement.outerHTML;
+
+            // 3. Ersetze den Platzhalter-Block im HTML mit den neuen Daten
+            const dataPlaceholderRegex = /\/\*--DATA_PLACEHOLDER_START--\*\/[\s\S]*?\/\*--DATA_PLACEHOLDER_END--\*\//;
+            const newHtml = currentHtml.replace(dataPlaceholderRegex, `/*--DATA_PLACEHOLDER_START--*/${dataAsString}/*--DATA_PLACEHOLDER_END--*/`);
+
+            // 4. Erstelle ein "Blob"-Objekt, das wie eine Datei behandelt werden kann
+            const blob = new Blob([newHtml], { type: 'text/html' });
+
+            // 5. Erstelle einen unsichtbaren Download-Link und klicke ihn
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'lernkarten-gespeichert.html'; // Dateiname für den Download
+            link.click();
+
+            // 6. Räume die temporäre URL auf
+            URL.revokeObjectURL(link.href);
+            
+            alert("Ihre Lernkarten wurden als neue HTML-Datei heruntergeladen.\nBitte öffnen Sie diese neue Datei, um mit Ihren Änderungen weiterzuarbeiten.");
         }
 
-        function saveDataToLocalStorage() {
-            localStorage.setItem('pythonLernkarten', JSON.stringify(appData));
-        }
 
         // --- MAIN INITIALIZATION ---
         function main() {
-            loadDataFromLocalStorage();
+            // Die Daten sind bereits in `appData` geladen. Kein LocalStorage mehr nötig.
             renderUI();
             setupEventListeners();
         }
 
-        // --- UI RENDERING ---
+        // --- UI RENDERING (unverändert) ---
         function renderUI() {
             renderChapterList();
             renderMainContent();
         }
-        
         function renderChapterList() {
             chapterList.innerHTML = '';
             if (Object.keys(appData).length === 0) {
-                chapterList.innerHTML = '<p class="text-gray-400 px-4 py-2">Keine Kapitel gefunden.</p>';
-                return;
+                chapterList.innerHTML = '<p class="text-gray-400 px-4 py-2">Keine Kapitel gefunden.</p>'; return;
             }
-            for (const chapterId in appData) {
-                const chapter = appData[chapterId];
+            const sortedChapters = Object.values(appData).sort((a, b) => a.name.localeCompare(b.name));
+            for (const chapter of sortedChapters) {
                 const li = document.createElement('li');
-                const isActive = chapterId === currentChapterId;
-                li.innerHTML = `
-                    <a href="#" data-id="${chapter.id}" class="chapter-item flex justify-between items-center px-4 py-3 rounded-md transition-colors duration-200 ${isActive ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700'}">
-                        <span class="truncate pr-2">${chapter.name}</span>
-                        <button data-id="${chapter.id}" class="delete-chapter-btn flex-shrink-0 text-gray-500 hover:text-red-400 text-xs">✕</button>
-                    </a>
-                `;
+                const isActive = chapter.id === currentChapterId;
+                li.innerHTML = `<a href="#" data-id="${chapter.id}" class="chapter-item flex justify-between items-center px-4 py-3 rounded-md transition-colors duration-200 ${isActive ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:bg-gray-700'}"><span class="truncate pr-2">${chapter.name}</span><button data-id="${chapter.id}" class="delete-chapter-btn flex-shrink-0 text-gray-500 hover:text-red-400 text-lg leading-none p-1 rounded-full">×</button></a>`;
                 chapterList.appendChild(li);
             }
         }
-        
         function renderMainContent() {
             noChapterSelected.classList.add('hidden');
             noCardsInChapter.classList.add('hidden');
             chapterComplete.classList.add('hidden');
             cardView.classList.add('hidden');
             addCardBtn.classList.add('hidden');
-
             if (!currentChapterId) {
                 mainHeader.textContent = "Lernkarten";
-                noChapterSelected.classList.remove('hidden');
-                return;
+                noChapterSelected.classList.remove('hidden'); return;
             }
-            
             addCardBtn.classList.remove('hidden');
             const chapter = appData[currentChapterId];
             mainHeader.textContent = chapter.name;
-
             if (!chapter.cards || chapter.cards.length === 0) {
-                noCardsInChapter.classList.remove('hidden');
-                return;
+                noCardsInChapter.classList.remove('hidden'); return;
             }
-            
             if (unansweredCardIds.length === 0) {
-                chapterComplete.classList.remove('hidden');
-                return;
+                chapterComplete.classList.remove('hidden'); return;
             }
-            
             cardView.classList.remove('hidden');
         }
         
-        // --- LEARNING FLOW ---
+        // --- LEARNING FLOW (unverändert) ---
         function startLearningSession(chapterId) {
             currentChapterId = chapterId;
             const chapter = appData[chapterId];
-            if (chapter && chapter.cards) {
-                unansweredCardIds = chapter.cards.map(card => card.id);
-            } else {
-                unansweredCardIds = [];
-            }
+            unansweredCardIds = (chapter && chapter.cards) ? chapter.cards.map(card => card.id) : [];
             renderUI();
             showNextRandomCard();
         }
-
         function showNextRandomCard() {
-            if (unansweredCardIds.length === 0) {
-                renderMainContent();
-                return;
+            if (!currentChapterId || unansweredCardIds.length === 0) {
+                renderMainContent(); return;
             }
-
             const randomIndex = Math.floor(Math.random() * unansweredCardIds.length);
             const nextCardId = unansweredCardIds[randomIndex];
             currentCard = appData[currentChapterId].cards.find(card => card.id === nextCardId);
-            
             displayCard(currentCard);
         }
-
         function displayCard(card) {
             if (!card) return;
             questionEl.textContent = card.question;
             answerEl.textContent = card.answer;
             const totalCards = appData[currentChapterId].cards.length;
-            cardCounter.textContent = `Verbleibend: ${unansweredCardIds.length} / ${totalCards}`;
-            
+            const remaining = unansweredCardIds.length;
+            cardCounter.textContent = `Karte ${totalCards - remaining + 1} von ${totalCards}`;
             userAnswerInput.value = '';
             feedbackSection.classList.add('hidden');
             knowItAnywayBtn.classList.add('hidden');
             tryNextCardBtn.classList.add('hidden');
             userAnswerInput.focus();
         }
-
         function checkAnswer() {
             if (!currentCard) return;
-            const normalize = (str) => str.replace(/\s+/g, ' ').trim();
-            const userAnswer = normalize(userAnswerInput.value);
-            const correctAnswer = normalize(currentCard.answer);
-
-            feedbackSection.classList.remove('hidden');
-            
-            if (userAnswer === correctAnswer) {
+            const normalize = str => str.replace(/\s+/g, ' ').trim();
+            if (normalize(userAnswerInput.value) === normalize(currentCard.answer)) {
                 feedbackMessage.textContent = 'Richtig!';
                 feedbackMessage.className = 'text-center font-bold p-3 rounded-md mb-4 bg-green-500/20 text-green-400';
+                feedbackSection.classList.remove('hidden');
                 setTimeout(handleCorrectAnswer, 1200);
             } else {
                 feedbackMessage.textContent = 'Falsch. Sieh dir die Lösung an.';
                 feedbackMessage.className = 'text-center font-bold p-3 rounded-md mb-4 bg-red-500/20 text-red-400';
+                feedbackSection.classList.remove('hidden');
                 knowItAnywayBtn.classList.remove('hidden');
                 tryNextCardBtn.classList.remove('hidden');
             }
         }
-
         function handleCorrectAnswer() {
             if (!currentCard) return;
             unansweredCardIds = unansweredCardIds.filter(id => id !== currentCard.id);
-            renderUI(); // Re-render to update counters etc.
             showNextRandomCard();
         }
         
-        // --- DATA MANIPULATION ---
+        // --- DATA MANIPULATION (kein saveToLocalStorage mehr) ---
         function saveNewChapter() {
             const name = newChapterNameInput.value.trim();
             if (!name) return;
-            
             const newChapterId = 'chapter-' + Date.now();
             appData[newChapterId] = { id: newChapterId, name: name, cards: [] };
-            
-            saveDataToLocalStorage();
             newChapterNameInput.value = '';
             hideModal(addChapterModal);
-            currentChapterId = newChapterId; // Automatically select new chapter
-            startLearningSession(currentChapterId);
+            startLearningSession(newChapterId);
         }
-
         function saveNewCard() {
             const question = newCardQuestionInput.value.trim();
             const answer = newCardAnswerInput.value.trim();
             if (!question || !answer || !currentChapterId) return;
-
             const newCardId = 'card-' + Date.now();
             const newCard = { id: newCardId, question, answer };
-            
+            if (!appData[currentChapterId].cards) appData[currentChapterId].cards = [];
             appData[currentChapterId].cards.push(newCard);
-            
-            saveDataToLocalStorage();
             newCardQuestionInput.value = '';
             newCardAnswerInput.value = '';
             hideModal(addCardModal);
-            startLearningSession(currentChapterId); // Restart session to include new card
+            startLearningSession(currentChapterId); 
         }
-
         function deleteChapter(chapterId) {
-             showConfirm('Kapitel löschen?', `Sind Sie sicher, dass Sie das Kapitel "${appData[chapterId].name}" und alle Karten darin löschen möchten?`, () => {
+             showConfirm('Kapitel löschen?', `Möchten Sie das Kapitel "${appData[chapterId].name}" wirklich löschen? Diese Änderung wird erst nach dem Speichern der Datei permanent.`, () => {
                 delete appData[chapterId];
-                saveDataToLocalStorage();
-                
                 if (currentChapterId === chapterId) {
                     currentChapterId = null;
+                    unansweredCardIds = [];
+                    currentCard = null;
                 }
                 renderUI();
             });
@@ -374,6 +301,10 @@
 
         // --- EVENT LISTENERS SETUP ---
         function setupEventListeners() {
+            // Neuer Event Listener für den Speicher-Button
+            document.getElementById('saveFileBtn').addEventListener('click', saveToFile);
+            
+            // Bestehende Event Listeners
             document.getElementById('addChapterBtn').addEventListener('click', () => showModal(addChapterModal));
             document.getElementById('addCardBtn').addEventListener('click', () => showModal(addCardModal));
             document.getElementById('cancelChapterBtn').addEventListener('click', () => hideModal(addChapterModal));
@@ -384,15 +315,14 @@
             knowItAnywayBtn.addEventListener('click', handleCorrectAnswer);
             tryNextCardBtn.addEventListener('click', showNextRandomCard);
             restartChapterBtn.addEventListener('click', () => startLearningSession(currentChapterId));
-
-            // Global event delegation for dynamically created elements
-            document.body.addEventListener('click', (e) => {
+            userAnswerInput.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); checkAnswer(); } });
+            document.body.addEventListener('click', e => {
                 const chapterItem = e.target.closest('.chapter-item');
                 if (chapterItem) {
                     e.preventDefault();
-                    startLearningSession(chapterItem.dataset.id);
+                    const chapterId = chapterItem.dataset.id;
+                    if (chapterId !== currentChapterId) startLearningSession(chapterId);
                 }
-                
                 const deleteBtn = e.target.closest('.delete-chapter-btn');
                 if (deleteBtn) {
                     e.preventDefault();
@@ -402,32 +332,14 @@
             });
         }
         
-        // --- MODAL & CONFIRMATION UTILITIES (unchanged) ---
-        function showModal(modal) {
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.querySelector('.modal-backdrop').classList.remove('opacity-0');
-                modal.querySelector('.modal-content').classList.remove('opacity-0', 'scale-95');
-            }, 10);
-        }
-
-        function hideModal(modal) {
-            modal.querySelector('.modal-backdrop').classList.add('opacity-0');
-            modal.querySelector('.modal-content').classList.add('opacity-0', 'scale-95');
-            setTimeout(() => { modal.classList.add('hidden'); }, 300);
-        }
-        
+        // --- MODAL & CONFIRMATION UTILITIES (unverändert) ---
+        function showModal(modal) { modal.classList.remove('hidden'); setTimeout(() => { modal.querySelector('.modal-backdrop').classList.remove('opacity-0'); modal.querySelector('.modal-content').classList.remove('opacity-0', 'scale-95'); }, 10); }
+        function hideModal(modal) { modal.querySelector('.modal-backdrop').classList.add('opacity-0'); modal.querySelector('.modal-content').classList.add('opacity-0', 'scale-95'); setTimeout(() => { modal.classList.add('hidden'); }, 300); }
         const confirmModal = document.getElementById('confirmModal');
         let confirmCallback = null;
         document.getElementById('confirmCancelBtn').addEventListener('click', () => { hideModal(confirmModal); confirmCallback = null; });
         document.getElementById('confirmOkBtn').addEventListener('click', () => { if (confirmCallback) confirmCallback(); hideModal(confirmModal); confirmCallback = null; });
-
-        function showConfirm(title, message, callback) {
-            document.getElementById('confirmTitle').textContent = title;
-            document.getElementById('confirmMessage').textContent = message;
-            confirmCallback = callback;
-            showModal(confirmModal);
-        }
+        function showConfirm(title, message, callback) { document.getElementById('confirmTitle').textContent = title; document.getElementById('confirmMessage').textContent = message; confirmCallback = callback; showModal(confirmModal); }
 
         // --- START THE APP ---
         main();
