@@ -11,7 +11,6 @@
         .fira-code { font-family: 'Fira Code', monospace; }
         /* Versteckt den Datencontainer, damit er nicht auf der Seite erscheint */
         #data-storage { display: none; }
-        .answer-container { display: none; } /* Antworten standardmäßig verstecken */
     </style>
 </head>
 <body class="bg-gray-900 text-white flex flex-col md:flex-row h-screen antialiased">
@@ -41,9 +40,6 @@
 
     <!-- =========== HIER DEINE KAPITEL UND KARTEN EINFÜGEN =========== -->
 
-    <!-- BEISPIEL-KAPITEL 1: Grundlagen -->
-    
-
     <div class="chapter-container" data-chapter-name="Python Grundlagen">
 
         <div class="flashcard">
@@ -57,106 +53,12 @@
         </div>
 
         <div class="flashcard">
-            <div class="question">Wandle den String "3.14" in eine Gleitkommazahl um und speichere sie in der Variable `pi_wert`.</div>
-            <div class="answer fira-code">pi_wert = float("3.14")</div>
-        </div>
-
-        <div class="flashcard">
             <div class="question">Prüfe, ob die Variable `a` gleich der Variable `b` ist. Speichere das Ergebnis (True/False) in `sind_gleich`.</div>
             <div class="answer fira-code">sind_gleich = (a == b)</div>
         </div>
-
-        <div class="flashcard">
-            <div class="question">Ermittle die Länge des Strings in der Variable `text` und speichere sie in `laenge`.</div>
-            <div class="answer fira-code">laenge = len(text)</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Wandle den gesamten String in der Variable `mein_string` in Großbuchstaben um und speichere das Ergebnis in `output`.</div>
-            <div class="answer fira-code">output = mein_string.upper()</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Teile den String `csv_daten` bei jedem Komma und speichere die resultierende Liste in `daten_liste`.</div>
-            <div class="answer fira-code">daten_liste = csv_daten.split(',')</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Wenn die Variable `alter` größer oder gleich 18 ist, gib "Volljährig" aus.</div>
-            <div class="answer fira-code">if alter >= 18:
-        print("Volljährig")</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Wenn `wert` kleiner als 10 ist, gib "klein" aus, ansonsten gib "groß" aus.</div>
-            <div class="answer fira-code">if wert < 10:
-        print("klein")
-    else:
-        print("groß")</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Iteriere mit einer `for`-Schleife über die Liste `elemente` und gib jedes Element aus.</div>
-            <div class="answer fira-code">for item in elemente:
-        print(item)</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Nutze eine `while`-Schleife, um die Variable `zaehler` von 1 auf 5 zu erhöhen und bei jeder Iteration den Wert auszugeben.</div>
-            <div class="answer fira-code">zaehler = 1
-    while zaehler <= 5:
-        print(zaehler)
-        zaehler += 1</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Füge das Element "Apfel" am Ende der Liste `obst` hinzu.</div>
-            <div class="answer fira-code">obst.append("Apfel")</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Greife auf das erste Element der Liste `daten` zu und speichere es in `erstes_element`.</div>
-            <div class="answer fira-code">erstes_element = daten[0]</div>
-        </div>
         
-        <div class="flashcard">
-            <div class="question">Entferne das letzte Element aus der Liste `meine_liste`.</div>
-            <div class="answer fira-code">meine_liste.pop()</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Sortiere die Liste `zahlen` in aufsteigender Reihenfolge.</div>
-            <div class="answer fira-code">zahlen.sort()</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Erstelle ein Dictionary `auto` mit dem Schlüssel "marke" und dem Wert "BMW".</div>
-            <div class="answer fira-code">auto = {"marke": "BMW"}</div>
-        </div>
-        
-        <div class="flashcard">
-            <div class="question">Füge dem Dictionary `person` den Schlüssel "alter" mit dem Wert 30 hinzu.</div>
-            <div class="answer fira-code">person["alter"] = 30</div>
-        </div>
-        
-        <div class="flashcard">
-            <div class="question">Greife auf den Wert des Schlüssels "stadt" im Dictionary `adresse` zu und speichere ihn in `wohnort`.</div>
-            <div class="answer fira-code">wohnort = adresse["stadt"]</div>
-        </div>
-
-        <div class="flashcard">
-            <div class="question">Erstelle ein Set `einzigartige_werte` aus der Liste `werte_mit_duplikaten`.</div>
-            <div class="answer fira-code">einzigartige_werte = set(werte_mit_duplikaten)</div>
-        </div>
-        
-        <div class="flashcard">
-            <div class="question">Gegeben sind die Sets `set1` und `set2`. Bilde die Vereinigung der beiden und speichere sie in `ergebnis_set`.</div>
-            <div class="answer fira-code">ergebnis_set = set1.union(set2)</div>
-        </div>
-
     </div>
 
-    <!-- BEISPIEL-KAPITEL 2: Schleifen und Listen -->
     <div class="chapter-container" data-chapter-name="Schleifen und Listen">
         
         <div class="flashcard">
@@ -167,7 +69,7 @@ for number in my_list:
         </div>
 
         <div class="flashcard">
-            <div class="question">Was gibt `range(5)` zurück?</div>
+            <div class="question">Was gibt `range(5)` zurück? (Textantwort)</div>
             <div class="answer">Ein Objekt, das eine Sequenz von Zahlen von 0 bis 4 repräsentiert.</div>
         </div>
 
@@ -175,22 +77,14 @@ for number in my_list:
     
     <!-- KOPIER-VORLAGE FÜR NEUES KAPITEL:
     <div class="chapter-container" data-chapter-name="Dein neuer Kapitelname">
-        
         <div class="flashcard">
             <div class="question">Deine erste Frage hier...</div>
-            <div class="answer">Deine erste Antwort hier...</div>
+            <div class="answer fira-code">Deine erste Antwort hier...</div>
         </div>
-        
-        <div class="flashcard">
-            <div class="question">Deine zweite Frage hier...</div>
-            <div class="answer">Deine zweite Antwort hier...</div>
-        </div>
-
     </div>
     -->
 
     <!-- =================================================================== -->
-
 </div>
 
 
@@ -234,22 +128,27 @@ for number in my_list:
             <!-- Die eigentliche Karteikarten-Ansicht -->
             <div id="card-view" class="w-full h-full flex flex-col hidden">
                 <div class="flex-grow flex flex-col justify-center">
-                    <!-- Frage -->
                     <div class="mb-4">
-                        <p class="text-sm text-indigo-400 mb-2">FRAGE</p>
-                        <p id="question-text" class="text-xl md:text-2xl text-gray-200"></p>
+                        <p class="text-sm text-indigo-400 mb-2">AUFGABE</p>
+                        <p id="question" class="text-xl md:text-2xl text-gray-200"></p>
                     </div>
-                    <!-- Antwort (anfangs versteckt) -->
-                    <div id="answer-container" class="my-4 answer-container">
-                        <p class="text-sm text-green-400 mb-2">ANTWORT</p>
-                        <div id="answer-text" class="bg-gray-900 rounded-md p-4 w-full overflow-x-auto text-base text-gray-300"></div>
+                    <div class="my-4">
+                         <label for="user-answer-input" class="block text-sm font-medium text-gray-300 mb-1">Deine Antwort</label>
+                         <textarea id="user-answer-input" rows="6" placeholder="Schreibe deinen Code oder deine Antwort hier..." class="w-full bg-gray-900 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 fira-code"></textarea>
+                    </div>
+                    <button id="check-answer-btn" class="my-2 self-center px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-md transition-colors duration-200 font-semibold">Prüfen</button>
+                    <div id="feedback-section" class="hidden mt-4">
+                        <div id="feedback-message" class="text-center font-bold p-3 rounded-md mb-4"></div>
+                        <p class="text-sm text-green-400 mb-2">KORREKTE LÖSUNG</p>
+                        <pre class="bg-gray-900 rounded-md p-4 w-full overflow-x-auto"><code id="answer" class="fira-code text-base text-gray-300"></code></pre>
+                        <div class="text-center mt-4 space-x-4">
+                             <button id="know-it-anyway-btn" class="hidden px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-sm rounded-md transition-colors duration-200">Als richtig werten</button>
+                             <button id="try-next-card-btn" class="hidden px-4 py-2 bg-gray-600 hover:bg-gray-500 text-sm rounded-md transition-colors duration-200">Nächste versuchen</button>
+                        </div>
                     </div>
                 </div>
-                <!-- Steuerung -->
-                <div class="flex-shrink-0 flex flex-col sm:flex-row justify-center items-center mt-6 space-y-4 sm:space-y-0 sm:space-x-4">
-                     <span id="card-counter" class="text-gray-400 order-1 sm:order-none"></span>
-                     <button id="show-answer-btn" class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-md transition-colors duration-200 font-semibold">Antwort zeigen</button>
-                     <button id="next-card-btn" class="w-full sm:w-auto hidden px-6 py-3 bg-green-600 hover:bg-green-500 rounded-md transition-colors duration-200 font-semibold">Nächste Karte</button>
+                <div class="flex-shrink-0 flex justify-center items-center mt-6">
+                    <span id="card-counter" class="text-gray-400"></span>
                 </div>
             </div>
         </div>
@@ -257,28 +156,34 @@ for number in my_list:
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Zustand der App
+        // --- Zustand der App ---
         let chapters = [];
         let currentChapterIndex = -1;
-        let currentCardIndex = -1;
-        let cardOrder = [];
+        let currentCard = null;
+        let unansweredCardIndices = [];
 
-        // DOM-Elemente
+        // --- DOM-Elemente ---
         const chapterListEl = document.getElementById('chapterList');
         const mainHeaderEl = document.getElementById('main-header');
+        
         const welcomeView = document.getElementById('welcome-view');
         const noCardsView = document.getElementById('no-cards-view');
         const chapterCompleteView = document.getElementById('chapter-complete-view');
         const cardView = document.getElementById('card-view');
-        const questionTextEl = document.getElementById('question-text');
-        const answerContainerEl = document.getElementById('answer-container');
-        const answerTextEl = document.getElementById('answer-text');
+        
+        const questionEl = document.getElementById('question');
+        const userAnswerInput = document.getElementById('user-answer-input');
+        const checkAnswerBtn = document.getElementById('check-answer-btn');
         const cardCounterEl = document.getElementById('card-counter');
-        const showAnswerBtn = document.getElementById('show-answer-btn');
-        const nextCardBtn = document.getElementById('next-card-btn');
+        
+        const feedbackSection = document.getElementById('feedback-section');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const answerEl = document.getElementById('answer');
+        const knowItAnywayBtn = document.getElementById('know-it-anyway-btn');
+        const tryNextCardBtn = document.getElementById('try-next-card-btn');
         const restartChapterBtn = document.getElementById('restart-chapter-btn');
 
-        // 1. Daten aus dem DOM auslesen
+        // --- 1. Daten aus dem DOM auslesen ---
         function parseDataFromDOM() {
             const chapterNodes = document.querySelectorAll('#data-storage .chapter-container');
             chapterNodes.forEach(chapterNode => {
@@ -287,34 +192,27 @@ for number in my_list:
                 const cardNodes = chapterNode.querySelectorAll('.flashcard');
                 cardNodes.forEach(cardNode => {
                     const question = cardNode.querySelector('.question')?.innerHTML || 'Keine Frage gefunden';
-                    const answer = cardNode.querySelector('.answer')?.innerHTML || 'Keine Antwort gefunden';
-                    cards.push({ question, answer });
+                    // Wichtig: Wir brauchen den reinen Text für den Vergleich
+                    const answerHTML = cardNode.querySelector('.answer')?.innerHTML || 'Keine Antwort gefunden';
+                    const answerText = cardNode.querySelector('.answer')?.textContent || 'Keine Antwort gefunden';
+                    cards.push({ question, answerHTML, answerText });
                 });
                 chapters.push({ name: chapterName, cards });
             });
         }
 
-        // 2. UI aufbauen
+        // --- 2. UI aufbauen ---
         function renderChapterList() {
             chapterListEl.innerHTML = '';
-            if (chapters.length === 0) {
-                 chapterListEl.innerHTML = '<p class="text-gray-400 px-4 py-2">Keine Kapitel gefunden.</p>';
-                 return;
-            }
             chapters.forEach((chapter, index) => {
                 const li = document.createElement('li');
                 const isActive = index === currentChapterIndex;
-                li.innerHTML = `
-                    <a href="#" data-index="${index}" class="chapter-item block px-4 py-3 rounded-md transition-colors duration-200 ${isActive ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:bg-gray-700'}">
-                        <span class="truncate pr-2">${chapter.name}</span>
-                    </a>
-                `;
+                li.innerHTML = `<a href="#" data-index="${index}" class="chapter-item block px-4 py-3 rounded-md transition-colors duration-200 ${isActive ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:bg-gray-700'}"><span class="truncate">${chapter.name}</span></a>`;
                 chapterListEl.appendChild(li);
             });
         }
         
         function updateMainView() {
-            // Alle Ansichten ausblenden
             welcomeView.classList.add('hidden');
             noCardsView.classList.add('hidden');
             chapterCompleteView.classList.add('hidden');
@@ -331,79 +229,104 @@ for number in my_list:
 
             if (chapter.cards.length === 0) {
                 noCardsView.classList.remove('hidden');
-                return;
-            }
-
-            if (currentCardIndex >= cardOrder.length) {
+            } else if (unansweredCardIndices.length === 0) {
                 chapterCompleteView.classList.remove('hidden');
-                return;
+            } else {
+                cardView.classList.remove('hidden');
             }
-            
-            cardView.classList.remove('hidden');
-            displayCurrentCard();
         }
 
-        // 3. Lernlogik
+        // --- 3. Lernlogik ---
         function startChapter(chapterIndex) {
             currentChapterIndex = chapterIndex;
             const chapter = chapters[chapterIndex];
+            unansweredCardIndices = Array.from(Array(chapter.cards.length).keys()); // [0, 1, 2, ...]
             
-            // Zufällige Reihenfolge der Karten erstellen
-            cardOrder = Array.from(Array(chapter.cards.length).keys()).sort(() => Math.random() - 0.5);
-            
-            currentCardIndex = 0;
             renderChapterList();
+            showNextRandomCard();
+        }
+
+        function showNextRandomCard() {
+            if (unansweredCardIndices.length === 0) {
+                updateMainView();
+                return;
+            }
+
+            const randomIndexInPool = Math.floor(Math.random() * unansweredCardIndices.length);
+            const cardIndex = unansweredCardIndices[randomIndexInPool];
+            currentCard = { ...chapters[currentChapterIndex].cards[cardIndex], originalIndex: cardIndex };
+
+            displayCard(currentCard);
             updateMainView();
         }
 
-        function displayCurrentCard() {
-            if (currentChapterIndex === -1 || currentCardIndex >= cardOrder.length) {
-                return;
-            }
+        function displayCard(card) {
+            questionEl.innerHTML = card.question;
+            answerEl.innerHTML = card.answerHTML; // Setzt das HTML für die Anzeige
             
-            const cardRealIndex = cardOrder[currentCardIndex];
-            const card = chapters[currentChapterIndex].cards[cardRealIndex];
-
-            questionTextEl.innerHTML = card.question;
-            answerTextEl.innerHTML = card.answer;
+            const totalCards = chapters[currentChapterIndex].cards.length;
+            cardCounterEl.textContent = `Verbleibend: ${unansweredCardIndices.length} / ${totalCards}`;
             
-            cardCounterEl.textContent = `Karte ${currentCardIndex + 1} von ${cardOrder.length}`;
-            
-            // Zustand zurücksetzen
-            answerContainerEl.style.display = 'none';
-            showAnswerBtn.classList.remove('hidden');
-            nextCardBtn.classList.add('hidden');
+            userAnswerInput.value = '';
+            userAnswerInput.focus();
+            feedbackSection.classList.add('hidden');
+            knowItAnywayBtn.classList.add('hidden');
+            tryNextCardBtn.classList.add('hidden');
         }
-        
-        // 4. Event-Handler
+
+        function checkAnswer() {
+            if (!currentCard) return;
+            const normalize = (str) => str.replace(/\s+/g, ' ').trim();
+            const userAnswer = normalize(userAnswerInput.value);
+            const correctAnswer = normalize(currentCard.answerText);
+
+            feedbackSection.classList.remove('hidden');
+            
+            if (userAnswer === correctAnswer) {
+                feedbackMessage.textContent = 'Richtig!';
+                feedbackMessage.className = 'text-center font-bold p-3 rounded-md mb-4 bg-green-500/20 text-green-400';
+                setTimeout(handleCorrectAnswer, 1200);
+            } else {
+                feedbackMessage.textContent = 'Falsch. Sieh dir die Lösung an.';
+                feedbackMessage.className = 'text-center font-bold p-3 rounded-md mb-4 bg-red-500/20 text-red-400';
+                knowItAnywayBtn.classList.remove('hidden');
+                tryNextCardBtn.classList.remove('hidden');
+            }
+        }
+
+        function handleCorrectAnswer() {
+            if (!currentCard) return;
+            // Entferne die Karte aus dem Pool der unbeantworteten Karten
+            unansweredCardIndices = unansweredCardIndices.filter(index => index !== currentCard.originalIndex);
+            showNextRandomCard();
+        }
+
+        // --- 4. Event-Handler ---
         chapterListEl.addEventListener('click', (e) => {
             const chapterItem = e.target.closest('.chapter-item');
             if (chapterItem) {
                 e.preventDefault();
-                const index = parseInt(chapterItem.dataset.index, 10);
-                startChapter(index);
+                startChapter(parseInt(chapterItem.dataset.index, 10));
             }
         });
 
-        showAnswerBtn.addEventListener('click', () => {
-            answerContainerEl.style.display = 'block';
-            showAnswerBtn.classList.add('hidden');
-            nextCardBtn.classList.remove('hidden');
+        checkAnswerBtn.addEventListener('click', checkAnswer);
+        userAnswerInput.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                checkAnswer();
+            }
         });
 
-        nextCardBtn.addEventListener('click', () => {
-            currentCardIndex++;
-            updateMainView();
-        });
-
+        knowItAnywayBtn.addEventListener('click', handleCorrectAnswer);
+        tryNextCardBtn.addEventListener('click', showNextRandomCard);
         restartChapterBtn.addEventListener('click', () => {
             if (currentChapterIndex !== -1) {
                 startChapter(currentChapterIndex);
             }
         });
 
-
-        // App starten
+        // --- App starten ---
         function main() {
             parseDataFromDOM();
             renderChapterList();
