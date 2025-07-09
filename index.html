@@ -41,22 +41,115 @@
     <!-- =========== HIER DEINE KAPITEL UND KARTEN EINFÜGEN =========== -->
 
     <div class="chapter-container" data-chapter-name="Python Grundlagen">
-
+    
         <div class="flashcard">
             <div class="question">Speichere die Ganzzahl 42 in einer Variable namens `a`.</div>
             <div class="answer fira-code">a = 42</div>
         </div>
-
+    
         <div class="flashcard">
             <div class="question">Gegeben sind die Variablen `x` und `y`. Berechne ihre Differenz (x - y) und speichere sie in `ergebnis`.</div>
             <div class="answer fira-code">ergebnis = x - y</div>
         </div>
-
+    
+        <div class="flashcard">
+            <div class="question">Wandle den String "3.14" in eine Gleitkommazahl um und speichere sie in der Variable `pi_wert`.</div>
+            <div class="answer fira-code">pi_wert = float("3.14")</div>
+        </div>
+    
         <div class="flashcard">
             <div class="question">Prüfe, ob die Variable `a` gleich der Variable `b` ist. Speichere das Ergebnis (True/False) in `sind_gleich`.</div>
             <div class="answer fira-code">sind_gleich = (a == b)</div>
         </div>
+    
+        <div class="flashcard">
+            <div class="question">Ermittle die Länge des Strings in der Variable `text` und speichere sie in `laenge`.</div>
+            <div class="answer fira-code">laenge = len(text)</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Wandle den gesamten String in der Variable `mein_string` in Großbuchstaben um und speichere das Ergebnis in `output`.</div>
+            <div class="answer fira-code">output = mein_string.upper()</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Teile den String `csv_daten` bei jedem Komma und speichere die resultierende Liste in `daten_liste`.</div>
+            <div class="answer fira-code">daten_liste = csv_daten.split(',')</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Wenn die Variable `alter` größer oder gleich 18 ist, gib "Volljährig" aus.</div>
+            <div class="answer fira-code">if alter >= 18:
+        print("Volljährig")</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Wenn `wert` kleiner als 10 ist, gib "klein" aus, ansonsten gib "groß" aus.</div>
+            <div class="answer fira-code">if wert < 10:
+        print("klein")
+    else:
+        print("groß")</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Iteriere mit einer `for`-Schleife über die Liste `elemente` und gib jedes Element aus.</div>
+            <div class="answer fira-code">for item in elemente:
+        print(item)</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Nutze eine `while`-Schleife, um die Variable `zaehler` von 1 auf 5 zu erhöhen und bei jeder Iteration den Wert auszugeben.</div>
+            <div class="answer fira-code">zaehler = 1
+    while zaehler <= 5:
+        print(zaehler)
+        zaehler += 1</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Füge das Element "Apfel" am Ende der Liste `obst` hinzu.</div>
+            <div class="answer fira-code">obst.append("Apfel")</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Greife auf das erste Element der Liste `daten` zu und speichere es in `erstes_element`.</div>
+            <div class="answer fira-code">erstes_element = daten[0]</div>
+        </div>
         
+        <div class="flashcard">
+            <div class="question">Entferne das letzte Element aus der Liste `meine_liste`.</div>
+            <div class="answer fira-code">meine_liste.pop()</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Sortiere die Liste `zahlen` in aufsteigender Reihenfolge.</div>
+            <div class="answer fira-code">zahlen.sort()</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Erstelle ein Dictionary `auto` mit dem Schlüssel "marke" und dem Wert "BMW".</div>
+            <div class="answer fira-code">auto = {"marke": "BMW"}</div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">Füge dem Dictionary `person` den Schlüssel "alter" mit dem Wert 30 hinzu.</div>
+            <div class="answer fira-code">person["alter"] = 30</div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">Greife auf den Wert des Schlüssels "stadt" im Dictionary `adresse` zu und speichere ihn in `wohnort`.</div>
+            <div class="answer fira-code">wohnort = adresse["stadt"]</div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Erstelle ein Set `einzigartige_werte` aus der Liste `werte_mit_duplikaten`.</div>
+            <div class="answer fira-code">einzigartige_werte = set(werte_mit_duplikaten)</div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">Gegeben sind die Sets `set1` und `set2`. Bilde die Vereinigung der beiden und speichere sie in `ergebnis_set`.</div>
+            <div class="answer fira-code">ergebnis_set = set1.union(set2)</div>
+        </div>
+    
     </div>
 
     <div class="chapter-container" data-chapter-name="Schleifen und Listen">
