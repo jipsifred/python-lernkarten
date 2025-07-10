@@ -167,6 +167,82 @@ for number in my_list:
         </div>
 
     </div>
+
+    <div class="chapter-container" data-chapter-name="Funktionen">
+    
+        <div class="flashcard">
+            <div class="question">Schreiben Sie eine Funktion <code>get_first_index_negative(A)</code>, die als Parameter eine Liste <code>A</code> übergeben bekommt. Diese Funktion soll den kleinsten Index der Elemente in <code>A</code> zurückgeben, an dem ein Wert kleiner Null steht. Falls nur positive Werte vorkommen, soll die Funktion <code>-1</code> zurückgeben.</div>
+            <div class="answer fira-code"><pre><code>def get_first_index_negative(A):
+        for i in range(len(A)):
+            if A[i] < 0:
+                return i
+        return -1</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Rufen Sie die Funktion <code>get_first_index_negative(A)</code> auf und hinterlegen Sie den Rückgabewert in der Variablen <code>i</code>. Geben Sie den Wert des Arrays <code>A</code> an der Stelle <code>i</code> aus. (Gehen Sie davon aus, dass <code>A</code> existiert).</div>
+            <div class="answer fira-code"><pre><code># Annahme: A ist eine Liste, z.B. A = [1, 5, 8, -3, 4]
+    i = get_first_index_negative(A)
+    if i != -1:
+        print(A[i])</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Je nach Land wird die historische Einheit Pfund mit unterschiedlichen Faktoren in die SI-Einheit Gramm umgerechnet. Implementieren Sie eine Funktion <code>pound2gram(m, factor)</code>, die den Parameter <code>m</code> und einen optionalen Parameter <code>factor</code> übergeben bekommt. <code>m</code> ist eine Masse in Pfund. Der optionale Parameter soll den Defaultwert <code>453.592</code> haben, was der Umrechnung des modernen US Pfund in Gramm entspricht. Die Umrechnung soll anhand der Formel m<sub>gram</sub> = m<sub>pound</sub> ⋅ factor erfolgen. Die Funktion soll die Masse in Gramm zurückgeben.</div>
+            <div class="answer fira-code"><pre><code>def pound2gram(m, factor=453.592):
+        return m * factor</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Rufen Sie die Funktion <code>pound2gram(m)</code> mit der Variablen <code>mypounds</code> als Argument auf und weisen Sie den Rückgabewert der Variablen <code>mygrams</code> zu. (Gehen Sie davon aus, dass <code>mypounds</code> existiert).</div>
+            <div class="answer fira-code"><pre><code># Annahme: mypounds ist eine Zahl, z.B. mypounds = 2.5
+    mygrams = pound2gram(mypounds)</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">Im Folgenden sind einige Umrechnungsfaktoren für einige historische Pfunde angegeben: 500 <sup>Gramm</sup>⁄<sub>badisches Pfund</sub>, 373.24 <sup>Gramm</sup>⁄<sub>Troy Pound</sub>, 1000 <sup>Gramm</sup>⁄<sub>Dutch Pond</sub>. Rufen Sie die Funktion <code>pound2gram(m, factor)</code> mit allen drei Umrechnungsfaktoren für die Masse <code>mypounds</code> mit Wert 0.314 auf und legen Sie das Ergebnis in einem Dictionary <code>mygrams</code> mit Keys <code>'badisch'</code>, <code>'troy'</code> und <code>'dutch'</code> ab.</div>
+            <div class="answer fira-code"><pre><code>mypounds = 0.314
+    factors = {'badisch': 500, 'troy': 373.24, 'dutch': 1000}
+    mygrams = {}
+    
+    for key in factors:
+        mygrams[key] = pound2gram(mypounds, factors[key])</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">a) Schreiben Sie die Funktion <code>quantize_values(value, num_bits, scaling)</code>. Der Parameter <code>num_bits</code> soll hierbei den Default-Wert 8 haben und der Parameter <code>scaling</code> den Default-Wert 1. Die Funktion berechnet folgenden Wert: <code>floor(value * 2**num_bits / scaling)</code> und gibt ihn zurück. Des Weiteren soll sie prüfen, ob der Wert <code>scaling</code> kleiner gleich Null ist. Ist dies der Fall, soll ein <code>ValueError</code> geworfen werden. Gehen Sie davon aus, dass eine Funktion <code>floor</code> gegeben ist (z.B. aus dem <code>math</code>-Modul).</div>
+            <div class="answer fira-code"><pre><code>from math import floor
+    
+    def quantize_values(value, num_bits=8, scaling=1):
+        if scaling <= 0:
+            raise ValueError("scaling must be greater than zero")
+        return floor(value * 2**num_bits / scaling)</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">b) Rufen Sie die Funktion <code>quantize_values</code> mit dem Wert <code>value=10.1</code> und <code>scaling=100</code> auf und geben Sie den zurückgegebenen Wert aus. Der Parameter <code>num_bits</code> soll auf dem Default-Wert bleiben.</div>
+            <div class="answer fira-code"><pre><code>print(quantize_values(10.1, scaling=100))</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">c) Sie haben folgende rekursive Folge gegeben: a<sub>n</sub> = { a<sup>2</sup><sub>n-1</sub> wenn n > 0; 1.2 sonst }. Schreiben Sie die Funktion <code>rekursive_folge(n)</code>, welche den Wert der rekurisven Folge a<sub>n</sub> zurückgibt. Gehen Sie davon aus, dass der Übergabeparameter <code>n</code> vom Typ <code>int</code> ist.</div>
+            <div class="answer fira-code"><pre><code>def rekursive_folge(n):
+        if n > 0:
+            return rekursive_folge(n-1)**2
+        else:
+            return 1.2</code></pre></div>
+        </div>
+    
+        <div class="flashcard">
+            <div class="question">d) Schreiben Sie die Funktion <code>list_rek_folge(m)</code>, welche die Ergebnisse der rekurisven Folge a<sub>n</sub> von n = 0 bis n = m in einer Liste zurückgibt. Die Elemente der Liste sollen folgendermaßen angeordnet sein: a<sub>0</sub>, a<sub>1</sub>, ..., a<sub>m</sub>. Gehen Sie davon aus, dass Ihnen die Funktion <code>rekursive_folge</code> aus der letzten Teilaufgabe zur Verfügung steht und der Übergabeparameter <code>m</code> vom Typ <code>int</code> ist.</div>
+            <div class="answer fira-code"><pre><code>def list_rek_folge(m):
+        result = []
+        for i in range(m + 1):
+            result.append(rekursive_folge(i))
+        return result</code></pre></div>
+        </div>
+    
+    </div>
     
     <!-- KOPIER-VORLAGE FÜR NEUES KAPITEL:
     <div class="chapter-container" data-chapter-name="Dein neuer Kapitelname">
