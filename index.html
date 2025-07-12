@@ -27,12 +27,14 @@
         @keyframes correct-flash { 0%, 100% { box-shadow: 6px 6px 0 var(--border-color); } 50% { box-shadow: 0 0 20px 10px var(--success); } }
         .correct-flash-anim { animation: correct-flash 0.7s ease-in-out; }
         textarea.code-editor { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #d4d4d4; border: 2px solid var(--border-color); padding: 1rem; width: 100%; min-height: 200px; line-height: 1.5; }
+        .error-message { background-color: var(--error); color: white; border: 4px solid var(--border-color); padding: 1rem; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div id="app" class="max-w-4xl mx-auto">
-        <div class="text-center p-8 pixel-border">
+        <!-- Initialer Ladebildschirm -->
+        <div id="loading-screen" class="text-center p-8 pixel-border">
             <h2 class="text-xl mb-4">Lade Daten aus der Cloud...</h2>
             <p>Verbinde mit der zentralen Datenbank.</p>
         </div>
@@ -40,46 +42,68 @@
 
     <!-- Firebase SDKs -->
     <script type="module">
-                // Import the functions you need from the SDKs you need
-        import { initializeApp } from "firebase/app";
-        import { getAnalytics } from "firebase/analytics";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-        
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyDhnXdcAc-wIcL4AdObCOc4VNNZzNaZcXE",
-          authDomain: "python-lernkarten.firebaseapp.com",
-          projectId: "python-lernkarten",
-          storageBucket: "python-lernkarten.firebasestorage.app",
-          messagingSenderId: "819930642858",
-          appId: "1:819930642858:web:596fc0cb13d7c6d890d3d3",
-          measurementId: "G-Q7G1XYZQ08"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ===================================================================================
+        // DEINE AUFGABE: Ersetze die Platzhalter unten mit den Werten aus deinem Screenshot!
+        // ===================================================================================
+       const firebaseConfig = {
+            apiKey: "AIzaSyDhnXdcAc-wIcL4AdObCOc4VNNZzNaZcXE",
+            authDomain: "python-lernkarten.firebaseapp.com",
+            projectId: "python-lernkarten",
+            storageBucket: "python-lernkarten.firebasestorage.app",
+            messagingSenderId: "819930642858",
+            appId: "1:819930642858:web:596fc0cb13d7c6d890d3d3",
+            measurementId: "G-Q7G1XYZQ08"
+            };
+
+        const appContainer = document.getElementById('app');
+
+        // NEUE PRÜFUNG: Überprüfen, ob die Konfiguration ausgefüllt wurde
+        if (firebaseConfig.apiKey === "DEIN_API_KEY") {
+            appContainer.innerHTML = `
+                <div class="pixel-border error-message">
+                    <h2 class="text-xl mb-4">FEHLER: Firebase nicht konfiguriert!</h2>
+                    <p>Bitte öffne die HTML-Datei und ersetze die Platzhalter im 'firebaseConfig'-Objekt mit deinen echten Daten aus der Firebase-Konsole.</p>
+                </div>
+            `;
+            throw new Error("Firebase-Konfiguration ist nicht ausgefüllt.");
+        }
+
+        // ===================================================================================
+        // Firebase Initialisierung mit Fehlerbehandlung
+        // ===================================================================================
+        let db;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            console.log("Firebase erfolgreich initialisiert.");
+        } catch (error) {
+            console.error("Firebase Initialisierungsfehler:", error);
+            appContainer.innerHTML = `
+                <div class="pixel-border error-message">
+                    <h2 class="text-xl mb-4">FEHLER: Verbindung zur Datenbank fehlgeschlagen!</h2>
+                    <p>Überprüfe die Browser-Konsole (F12) für Details. Mögliche Ursachen:</p>
+                    <ul class="list-disc list-inside mt-2">
+                        <li>Die 'firebaseConfig'-Werte sind falsch.</li>
+                        <li>Deine Domain ist nicht in Firebase als autorisierte Domain hinzugefügt.</li>
+                    </ul>
+                </div>
+            `;
+            throw error;
+        }
 
         // ===================================================================================
         // GLOBAL APP STATE
         // ===================================================================================
         let state = {
             currentPage: 'dashboard',
-            categories: [], // Wird von Firestore befüllt
-            questions: [],  // Wird von Firestore befüllt
-            userProgress: JSON.parse(localStorage.getItem('userProgress')) || {}, // Fortschritt bleibt lokal
-            activeQuiz: {
-                categoryId: null,
-                queue: [],
-                currentQuestionIndex: 0,
-                mistakes: []
-            },
-            crud: {
-                editingCategory: null,
-                editingQuestion: null,
-            },
+            categories: [],
+            questions: [],
+            userProgress: JSON.parse(localStorage.getItem('userProgress')) || {},
+            activeQuiz: { categoryId: null, queue: [], currentQuestionIndex: 0, mistakes: [] },
+            crud: { editingCategory: null, editingQuestion: null },
             dbReady: false
         };
 
@@ -89,34 +113,40 @@
         const categoriesCol = collection(db, 'categories');
         const questionsCol = collection(db, 'questions');
 
+        let initialCategoriesLoaded = false;
+        let initialQuestionsLoaded = false;
+
+        function checkDbReady() {
+            if (initialCategoriesLoaded && initialQuestionsLoaded && !state.dbReady) {
+                console.log("Datenbank bereit!");
+                state.dbReady = true;
+                render();
+            }
+        }
+
         onSnapshot(categoriesCol, (snapshot) => {
             state.categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             console.log("Kategorien aktualisiert:", state.categories);
-            if(state.dbReady) render();
+            initialCategoriesLoaded = true;
+            checkDbReady();
+        }, (error) => {
+            console.error("Fehler beim Laden der Kategorien: ", error);
         });
 
         onSnapshot(questionsCol, (snapshot) => {
             state.questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             console.log("Fragen aktualisiert:", state.questions);
-            if(state.dbReady) render();
+            initialQuestionsLoaded = true;
+            checkDbReady();
+        }, (error) => {
+            console.error("Fehler beim Laden der Fragen: ", error);
         });
-
-        // Warten, bis beide Listener einmal geladen haben, um die App zu starten
-        Promise.all([
-            new Promise(res => onSnapshot(categoriesCol, res)),
-            new Promise(res => onSnapshot(questionsCol, res))
-        ]).then(() => {
-            console.log("Datenbank bereit!");
-            state.dbReady = true;
-            render();
-        });
-
+        
         // ===================================================================================
-        // RENDER FUNCTIONS (unverändert, aber jetzt mit globalen Daten)
+        // RENDER FUNCTIONS (Logik bleibt gleich)
         // ===================================================================================
-        const appContainer = document.getElementById('app');
-
         function render() {
+            if (!state.dbReady) return; // Nicht rendern, bevor die Daten da sind
             appContainer.innerHTML = '';
             const header = document.createElement('header');
             header.innerHTML = `
@@ -141,7 +171,9 @@
             const container = document.createElement('div');
             container.innerHTML = `<h2 class="text-xl mb-6">Wähle dein Level:</h2>`;
 
-            if (state.categories.length === 0) {
+            if (state.categories.length === 0 && state.questions.length === 0) {
+                 container.innerHTML += `<p class="mt-4">Willkommen! Es sind noch keine Inhalte vorhanden. Gehe zum 'Kodex', um deine erste Kategorie und Frage zu erstellen!</p>`;
+            } else if (state.categories.length === 0) {
                 container.innerHTML += `<p>Noch keine Kategorien erstellt. Gehe zum 'Kodex', um welche hinzuzufügen!</p>`;
             } else {
                 const grid = document.createElement('div');
@@ -156,7 +188,7 @@
                     card.innerHTML = `
                         <div>
                             <h3 class="text-lg mb-2">${cat.name}</h3>
-                            <p class="text-sm mb-4">${cat.description}</p>
+                            <p class="text-sm mb-4">${cat.description || 'Keine Beschreibung.'}</p>
                             <p class="text-xs mb-2">${catQuestions.length} Fragen</p>
                         </div>
                         <div>
@@ -360,7 +392,6 @@
         function handleAnswer(isCorrect) {
             const quizContainer = document.getElementById('quiz-container');
             const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
-            // Update local progress, no need to write to DB for this
             if (!isCorrect) state.activeQuiz.mistakes.push(question);
             quizContainer.classList.add(isCorrect ? 'correct-flash-anim' : 'shake-anim');
             setTimeout(() => { state.activeQuiz.currentQuestionIndex++; render(); }, 700);
