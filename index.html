@@ -151,10 +151,10 @@
             const header = document.createElement('header');
             header.innerHTML = `
                 <div class="flex justify-between items-center mb-8">
-                    <h1 class="text-2xl md:text-3xl">LERN-AVENTURE</h1>
+                    <h1 class="text-2xl md:text-3xl">INFO-MASTER</h1>
                     <div>
                         <button class="btn btn-secondary" data-nav="dashboard">Dashboard</button>
-                        <button class="btn btn-secondary ml-4" data-nav="crud">Kodex</button>
+                        <button class="btn btn-secondary ml-4" data-nav="crud">KATEGORIEN</button>
                     </div>
                 </div>
             `;
@@ -172,9 +172,9 @@
             container.innerHTML = `<h2 class="text-xl mb-6">Wähle dein Level:</h2>`;
 
             if (state.categories.length === 0 && state.questions.length === 0) {
-                 container.innerHTML += `<p class="mt-4">Willkommen! Es sind noch keine Inhalte vorhanden. Gehe zum 'Kodex', um deine erste Kategorie und Frage zu erstellen!</p>`;
+                 container.innerHTML += `<p class="mt-4">Willkommen! Es sind noch keine Inhalte vorhanden. Gehe zum 'KATEGORIEN', um deine erste Kategorie und Frage zu erstellen!</p>`;
             } else if (state.categories.length === 0) {
-                container.innerHTML += `<p>Noch keine Kategorien erstellt. Gehe zum 'Kodex', um welche hinzuzufügen!</p>`;
+                container.innerHTML += `<p>Noch keine Kategorien erstellt. Gehe zum 'KATEGORIEN', um welche hinzuzufügen!</p>`;
             } else {
                 const grid = document.createElement('div');
                 grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
@@ -248,7 +248,7 @@
 
         function renderCrud() {
             const container = document.createElement('div');
-            container.innerHTML = `<div class="flex justify-between items-center mb-6"><h2 class="text-xl">Kodex der Fragen</h2><button id="add-category-btn" class="btn btn-primary">Neue Kategorie</button></div>`;
+            container.innerHTML = `<div class="flex justify-between items-center mb-6"><h2 class="text-xl">KATEGORIEN der Fragen</h2><button id="add-category-btn" class="btn btn-primary">Neue Kategorie</button></div>`;
             state.categories.forEach(cat => {
                 const catSection = document.createElement('div');
                 catSection.className = 'pixel-border p-4 mb-6';
