@@ -416,6 +416,56 @@
                 document.getElementById('crud-modal').classList.add('hidden');
             }
         });
+        // ===================================================================================
+        // NEU: Event Listener für spezielle Tasten im Code-Editor
+        // ===================================================================================
+        document.body.addEventListener('keydown', function(e) {
+            // Diese Logik wird NUR ausgeführt, wenn du im Code-Editor mit der ID 'code-input' tippst.
+            if (e.target.id !== 'code-input') {
+                return;
+            }
+        
+            // 1. Funktionalität für die Tab-Taste (Einrückung statt Fokuswechsel)
+            if (e.key === 'Tab') {
+                // Verhindert das Standardverhalten (zum nächsten Element springen)
+                e.preventDefault(); 
+        
+                const start = e.target.selectionStart;
+                const end = e.target.selectionEnd;
+        
+                // Fügt 4 Leerzeichen an der aktuellen Cursor-Position ein
+                e.target.value = e.target.value.substring(0, start) +
+                    "    " +
+                    e.target.value.substring(end);
+        
+                // Setzt den Cursor an die richtige Stelle nach den 4 Leerzeichen
+                e.target.selectionStart = e.target.selectionEnd = start + 4;
+            }
+        
+            // 2. Funktionalität für die Enter-Taste (Automatische Einrückung nach einem Doppelpunkt)
+            if (e.key === 'Enter') {
+                // Findet die aktuelle Zeile, in der sich der Cursor befindet
+                const textLines = e.target.value.substring(0, e.target.selectionStart).split("\n");
+                const currentLine = textLines[textLines.length - 1];
+        
+                // Prüft, ob die Zeile mit einem Doppelpunkt endet (z.B. bei def, if, for, class)
+                if (currentLine.trim().endsWith(':')) {
+                    e.preventDefault(); // Verhindert den normalen Zeilenumbruch
+                    
+                    const start = e.target.selectionStart;
+                    const end = e.target.selectionEnd;
+                    const indent = "\n    "; // Ein Zeilenumbruch gefolgt von 4 Leerzeichen
+        
+                    // Fügt den Zeilenumbruch mit der Einrückung ein
+                    e.target.value = e.target.value.substring(0, start) +
+                        indent +
+                        e.target.value.substring(end);
+        
+                    // Setzt den Cursor an die neue Position in der eingerückten Zeile
+                    e.target.selectionStart = e.target.selectionEnd = start + indent.length;
+                }
+            }
+        });
 
         document.body.addEventListener('change', e => { if (e.target.id === 'q-type') { state.crud.editingQuestion.question_type = e.target.value; const promptText = document.getElementById('q-prompt')?.value || ''; if (!state.crud.editingQuestion.content) state.crud.editingQuestion.content = {}; state.crud.editingQuestion.content.prompt = promptText; renderQuestionFields(); } });
 
