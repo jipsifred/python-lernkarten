@@ -52,7 +52,7 @@
             apiKey: "AIzaSyDhnXdcAc-wIcL4AdObCOc4VNNZzNaZcXE",
             authDomain: "python-lernkarten.firebaseapp.com",
             projectId: "python-lernkarten",
-            storageBucket: "python-lernkarten.firebasestorage.app",
+            storageBucket: "python-lernkarten.appspot.com",
             messagingSenderId: "819930642858",
             appId: "1:819930642858:web:596fc0cb13d7c6d890d3d3",
             measurementId: "G-Q7G1XYZQ08"
@@ -209,7 +209,7 @@
 
         function renderQuiz() {
             const quiz = state.activeQuiz;
-            if (quiz.queue.length === 0 || quiz.currentQuestionIndex >= quiz.queue.length) {
+            if (quiz.currentQuestionIndex >= quiz.queue.length) {
                 renderQuizComplete();
                 return;
             }
@@ -242,7 +242,7 @@
         function renderQuizComplete() {
             const container = document.createElement('div');
             container.className = 'pixel-border p-8 text-center';
-            container.innerHTML = `<h2 class="text-2xl mb-4">Level geschafft!</h2><p class="mb-6">Gute Arbeit! Du hast alle Fragen für diese Sitzung beantwortet.</p>${state.activeQuiz.mistakes.length > 0 ? `<h3 class="text-lg mb-2">Fragen zur Wiederholung:</h3><ul class="mb-6 text-left list-disc list-inside">${state.activeQuiz.mistakes.map(q => `<li>${q.content.prompt}</li>`).join('')}</ul>` : '<p class="mb-6 text-green-600">Du hast keine Fehler gemacht!</p>'}<button class="btn btn-primary" data-nav="dashboard">Zurück zum Dashboard</button>`;
+            container.innerHTML = `<h2 class="text-2xl mb-4">Level geschafft!</h2><p class="mb-6">Gute Arbeit! Du hast alle Fragen für diese Sitzung beantwortet.</p>${state.activeQuiz.mistakes.length > 0 ? `<h3 class="text-lg mb-2">Fragen zur Wiederholung:</h3><ul class="mb-6 text-left list-disc list-inside">${[...new Set(state.activeQuiz.mistakes.map(q => q.content.prompt))].map(prompt => `<li>${prompt}</li>`).join('')}</ul>` : '<p class="mb-6 text-green-600">Du hast keine Fehler gemacht!</p>'}<button class="btn btn-primary" data-nav="dashboard">Zurück zum Dashboard</button>`;
             appContainer.appendChild(container);
         }
 
@@ -313,7 +313,7 @@
             if (e.target.matches('[data-nav]')) { state.currentPage = e.target.dataset.nav; render(); }
             if (e.target.matches('[data-start-quiz]')) {
                 const categoryId = e.target.dataset.startQuiz;
-                const questionsForCategory = state.questions.filter(q => q.category_id === categoryId);
+                let questionsForCategory = state.questions.filter(q => q.category_id === categoryId);
                 for (let i = questionsForCategory.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[questionsForCategory[i], questionsForCategory[j]] = [questionsForCategory[j], questionsForCategory[i]]; }
                 state.activeQuiz = { categoryId, queue: questionsForCategory, currentQuestionIndex: 0, mistakes: [] };
                 state.currentPage = 'quiz';
@@ -322,10 +322,40 @@
             if (e.target.matches('[data-answer-mcq]')) { handleAnswer(parseInt(e.target.dataset.answerMcq) === state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex].content.correct_index); }
             if (e.target.id === 'submit-code') {
                 const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
-                const userInput = document.getElementById('code-input').value;
-                const solutionHTML = `<div class="mt-6 p-4 border-t-4 border-black"><h4 class="font-bold mb-2">Deine Lösung:</h4><pre class="bg-gray-200 p-2 mb-4">${userInput}</pre><h4 class="font-bold mb-2">Musterlösung:</h4><pre class="bg-gray-200 p-2 mb-4">${question.content.solution}</pre><p class="text-center my-4">War deine Lösung richtig?</p><div class="flex justify-center gap-4"><button class="btn btn-error" id="self-eval-wrong">Falsch</button><button class="btn btn-success" id="self-eval-correct">Richtig</button></div></div>`;
-                e.target.closest('div').innerHTML = solutionHTML;
+                const userInput = document.getElementById('code-input').value.trim();
+                const solution = question.content.solution.trim();
+                const isIdentical = userInput === solution;
+
+                const quizContainer = document.getElementById('quiz-container');
+                let solutionHTML = `
+                    <div class="mt-6 p-4 border-t-4 border-black">
+                        <h4 class="font-bold mb-2">Deine Lösung:</h4>
+                        <pre class="bg-gray-200 p-2 mb-4 text-sm">${userInput || '(Keine Eingabe)'}</pre>
+                        <h4 class="font-bold mb-2">Musterlösung:</h4>
+                        <pre class="bg-gray-200 p-2 mb-4 text-sm">${solution}</pre>
+                `;
+
+                if (isIdentical) {
+                    solutionHTML += `
+                        <p class="text-center my-4 font-bold text-green-600 text-xl">KORREKT!</p>
+                        <div class="flex justify-center gap-4">
+                            <button class="btn btn-success" id="eval-continue">Weiter</button>
+                        </div>
+                    `;
+                } else {
+                    solutionHTML += `
+                        <p class="text-center my-4">Dein Code ist anders. Ist deine Lösung trotzdem logisch richtig?</p>
+                        <div class="flex justify-center gap-4">
+                            <button class="btn btn-error" id="self-eval-wrong">Falsch</button>
+                            <button class="btn btn-success" id="self-eval-correct">Richtig</button>
+                        </div>
+                    `;
+                }
+                solutionHTML += `</div>`;
+                quizContainer.innerHTML += solutionHTML;
+                e.target.style.display = 'none'; // Verstecke den ursprünglichen Button
             }
+            if (e.target.id === 'eval-continue') handleAnswer(true);
             if (e.target.id === 'self-eval-correct') handleAnswer(true);
             if (e.target.id === 'self-eval-wrong') handleAnswer(false);
             if (e.target.id === 'add-category-btn') { state.crud.editingCategory = {}; state.crud.editingQuestion = null; renderCrudModal(); }
@@ -392,9 +422,21 @@
         function handleAnswer(isCorrect) {
             const quizContainer = document.getElementById('quiz-container');
             const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
-            if (!isCorrect) state.activeQuiz.mistakes.push(question);
+            
+            if (!isCorrect) {
+                // Falsche Antwort: Zur Wiederholung vormerken und später wieder einfügen
+                state.activeQuiz.mistakes.push(question);
+                const reinsertIndex = Math.min(state.activeQuiz.currentQuestionIndex + 3, state.activeQuiz.queue.length);
+                state.activeQuiz.queue.splice(reinsertIndex, 0, question);
+                console.log(`Frage ${question.id} falsch. Wird an Position ${reinsertIndex} erneut eingefügt.`);
+            }
+
             quizContainer.classList.add(isCorrect ? 'correct-flash-anim' : 'shake-anim');
-            setTimeout(() => { state.activeQuiz.currentQuestionIndex++; render(); }, 700);
+            
+            setTimeout(() => {
+                state.activeQuiz.currentQuestionIndex++;
+                render();
+            }, 700);
         }
     </script>
 </body>
