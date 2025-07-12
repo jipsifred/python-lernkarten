@@ -3,507 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Lernkarten</title>
+    <title>Retro Python Lernplattform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .fira-code { font-family: 'Fira Code', monospace; }
-        /* Versteckt den Datencontainer, damit er nicht auf der Seite erscheint */
-        #data-storage { display: none; }
+        :root {
+            --background: #f7fff7; --text: #080810; --error: #e71839; --success: #52c64a;
+            --accent: #1094de; --warning: #f7a518; --border-color: #080810;
+            --font-body: 'Pixelify Sans', sans-serif; --font-title: 'Press Start 2P', cursive;
+        }
+        body { background-color: var(--background); color: var(--text); font-family: var(--font-body); font-size: 18px; }
+        h1, h2, h3 { font-family: var(--font-title); letter-spacing: 1px; }
+        .pixel-border { border: 4px solid var(--border-color); box-shadow: 6px 6px 0 var(--border-color); background-color: white; }
+        .btn { font-family: var(--font-title); padding: 10px 20px; border: 3px solid var(--border-color); text-transform: uppercase; font-size: 14px; cursor: pointer; transition: all 0.1s ease-in-out; box-shadow: 4px 4px 0 var(--border-color); }
+        .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--border-color); }
+        .btn:active { transform: translate(4px, 4px); box-shadow: none; }
+        .btn-primary { background-color: var(--accent); color: white; } .btn-success { background-color: var(--success); color: white; }
+        .btn-error { background-color: var(--error); color: white; } .btn-secondary { background-color: var(--warning); color: var(--text); }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
+        .shake-anim { animation: shake 0.5s ease-in-out; }
+        @keyframes correct-flash { 0%, 100% { box-shadow: 6px 6px 0 var(--border-color); } 50% { box-shadow: 0 0 20px 10px var(--success); } }
+        .correct-flash-anim { animation: correct-flash 0.7s ease-in-out; }
+        textarea.code-editor { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #d4d4d4; border: 2px solid var(--border-color); padding: 1rem; width: 100%; min-height: 200px; line-height: 1.5; }
     </style>
 </head>
-<body class="bg-gray-900 text-white flex flex-col md:flex-row h-screen antialiased">
+<body class="p-4 md:p-8">
 
-<!-- =============================================================================== -->
-<!-- ANLEITUNG: So fügst du neue Kapitel und Karten hinzu:
-    
-    1. Öffne diese HTML-Datei in einem Text-Editor (z.B. Notepad, VS Code, etc.).
-    2. Scrolle nach unten zum Abschnitt "HIER DEINE KAPITEL UND KARTEN EINFÜGEN".
-    3. Folge den Beispielen dort.
-
-    UM EIN NEUES KAPITEL HINZUZUFÜGEN:
-    Kopiere den kompletten Block von `<div class="chapter-container" ...>` bis zum schließenden `</div>` 
-    und ändere den Namen in `data-chapter-name="..."`.
-
-    UM EINE NEUE KARTEIKARTE HINZUZUFÜGEN:
-    Kopiere innerhalb eines Kapitels den Block `<div class="flashcard">...</div>` 
-    und ändere den Text in den divs "question" und "answer".
-
-    4. Speichere die Datei und öffne sie in deinem Webbrowser. Fertig!
--->
-<!-- =============================================================================== -->
-
-
-<!-- DATEN-CONTAINER: Hier werden alle Lerninhalte direkt als HTML geschrieben -->
-<div id="data-storage">
-
-    <!-- =========== HIER DEINE KAPITEL UND KARTEN EINFÜGEN =========== -->
-
-    <div class="chapter-container" data-chapter-name="Python Grundlagen">
-    
-        <div class="flashcard">
-            <div class="question">Speichere die Ganzzahl 42 in einer Variable namens `a`.</div>
-            <div class="answer fira-code">a = 42</div>
+    <div id="app" class="max-w-4xl mx-auto">
+        <div class="text-center p-8 pixel-border">
+            <h2 class="text-xl mb-4">Lade Daten aus der Cloud...</h2>
+            <p>Verbinde mit der zentralen Datenbank.</p>
         </div>
-    
-        <div class="flashcard">
-            <div class="question">Gegeben sind die Variablen `x` und `y`. Berechne ihre Differenz (x - y) und speichere sie in `ergebnis`.</div>
-            <div class="answer fira-code">ergebnis = x - y</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Wandle den String "3.14" in eine Gleitkommazahl um und speichere sie in der Variable `pi_wert`.</div>
-            <div class="answer fira-code">pi_wert = float("3.14")</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Prüfe, ob die Variable `a` gleich der Variable `b` ist. Speichere das Ergebnis (True/False) in `sind_gleich`.</div>
-            <div class="answer fira-code">sind_gleich = (a == b)</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Ermittle die Länge des Strings in der Variable `text` und speichere sie in `laenge`.</div>
-            <div class="answer fira-code">laenge = len(text)</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Wandle den gesamten String in der Variable `mein_string` in Großbuchstaben um und speichere das Ergebnis in `output`.</div>
-            <div class="answer fira-code">output = mein_string.upper()</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Teile den String `csv_daten` bei jedem Komma und speichere die resultierende Liste in `daten_liste`.</div>
-            <div class="answer fira-code">daten_liste = csv_daten.split(',')</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Wenn die Variable `alter` größer oder gleich 18 ist, gib "Volljährig" aus.</div>
-            <div class="answer fira-code">if alter >= 18:
-        print("Volljährig")</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Wenn `wert` kleiner als 10 ist, gib "klein" aus, ansonsten gib "groß" aus.</div>
-            <div class="answer fira-code">if wert < 10:
-        print("klein")
-    else:
-        print("groß")</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Iteriere mit einer `for`-Schleife über die Liste `elemente` und gib jedes Element aus.</div>
-            <div class="answer fira-code">for item in elemente:
-        print(item)</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Nutze eine `while`-Schleife, um die Variable `zaehler` von 1 auf 5 zu erhöhen und bei jeder Iteration den Wert auszugeben.</div>
-            <div class="answer fira-code">zaehler = 1
-    while zaehler <= 5:
-        print(zaehler)
-        zaehler += 1</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Füge das Element "Apfel" am Ende der Liste `obst` hinzu.</div>
-            <div class="answer fira-code">obst.append("Apfel")</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Greife auf das erste Element der Liste `daten` zu und speichere es in `erstes_element`.</div>
-            <div class="answer fira-code">erstes_element = daten[0]</div>
-        </div>
-        
-        <div class="flashcard">
-            <div class="question">Entferne das letzte Element aus der Liste `meine_liste`.</div>
-            <div class="answer fira-code">meine_liste.pop()</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Sortiere die Liste `zahlen` in aufsteigender Reihenfolge.</div>
-            <div class="answer fira-code">zahlen.sort()</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Erstelle ein Dictionary `auto` mit dem Schlüssel "marke" und dem Wert "BMW".</div>
-            <div class="answer fira-code">auto = {"marke": "BMW"}</div>
-        </div>
-        
-        <div class="flashcard">
-            <div class="question">Füge dem Dictionary `person` den Schlüssel "alter" mit dem Wert 30 hinzu.</div>
-            <div class="answer fira-code">person["alter"] = 30</div>
-        </div>
-        
-        <div class="flashcard">
-            <div class="question">Greife auf den Wert des Schlüssels "stadt" im Dictionary `adresse` zu und speichere ihn in `wohnort`.</div>
-            <div class="answer fira-code">wohnort = adresse["stadt"]</div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Erstelle ein Set `einzigartige_werte` aus der Liste `werte_mit_duplikaten`.</div>
-            <div class="answer fira-code">einzigartige_werte = set(werte_mit_duplikaten)</div>
-        </div>
-        
-        <div class="flashcard">
-            <div class="question">Gegeben sind die Sets `set1` und `set2`. Bilde die Vereinigung der beiden und speichere sie in `ergebnis_set`.</div>
-            <div class="answer fira-code">ergebnis_set = set1.union(set2)</div>
-        </div>
-    
     </div>
 
-    <div class="chapter-container" data-chapter-name="Schleifen und Listen">
-        
-        <div class="flashcard">
-            <div class="question">Erstelle eine Liste von Zahlen von 1 bis 3 und gib jedes Element mit einer for-Schleife aus.</div>
-            <div class="answer fira-code">my_list = [1, 2, 3]
-for number in my_list:
-    print(number)</div>
-        </div>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        <div class="flashcard">
-            <div class="question">Was gibt `range(5)` zurück? (Textantwort)</div>
-            <div class="answer">Ein Objekt, das eine Sequenz von Zahlen von 0 bis 4 repräsentiert.</div>
-        </div>
+        // ===================================================================================
+        // WICHTIG: Ersetze dies mit deiner eigenen Firebase-Konfiguration!
+        // Du findest diese in den Projekteinstellungen deines Firebase-Projekts.
+        // ===================================================================================
+        const firebaseConfig = {
+            apiKey: "DEIN_API_KEY",
+            authDomain: "DEIN_PROJEKT.firebaseapp.com",
+            projectId: "DEIN_PROJEKT_ID",
+            storageBucket: "DEIN_PROJEKT.appspot.com",
+            messagingSenderId: "DEIN_SENDER_ID",
+            appId: "DEIN_APP_ID"
+        };
 
-    </div>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    <div class="chapter-container" data-chapter-name="Funktionen">
-    
-        <div class="flashcard">
-            <div class="question">Schreiben Sie eine Funktion <code>get_first_index_negative(A)</code>, die als Parameter eine Liste <code>A</code> übergeben bekommt. Diese Funktion soll den kleinsten Index der Elemente in <code>A</code> zurückgeben, an dem ein Wert kleiner Null steht. Falls nur positive Werte vorkommen, soll die Funktion <code>-1</code> zurückgeben.</div>
-            <div class="answer fira-code"><pre><code>def get_first_index_negative(A):
-        for i in range(len(A)):
-            if A[i] < 0:
-                return i
-        return -1</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Rufen Sie die Funktion <code>get_first_index_negative(A)</code> auf und hinterlegen Sie den Rückgabewert in der Variablen <code>i</code>. Geben Sie den Wert des Arrays <code>A</code> an der Stelle <code>i</code> aus. (Gehen Sie davon aus, dass <code>A</code> existiert).</div>
-            <div class="answer fira-code"><pre><code># Annahme: A ist eine Liste, z.B. A = [1, 5, 8, -3, 4]
-    i = get_first_index_negative(A)
-    if i != -1:
-        print(A[i])</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Je nach Land wird die historische Einheit Pfund mit unterschiedlichen Faktoren in die SI-Einheit Gramm umgerechnet. Implementieren Sie eine Funktion <code>pound2gram(m, factor)</code>, die den Parameter <code>m</code> und einen optionalen Parameter <code>factor</code> übergeben bekommt. <code>m</code> ist eine Masse in Pfund. Der optionale Parameter soll den Defaultwert <code>453.592</code> haben, was der Umrechnung des modernen US Pfund in Gramm entspricht. Die Umrechnung soll anhand der Formel m<sub>gram</sub> = m<sub>pound</sub> ⋅ factor erfolgen. Die Funktion soll die Masse in Gramm zurückgeben.</div>
-            <div class="answer fira-code"><pre><code>def pound2gram(m, factor=453.592):
-        return m * factor</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Rufen Sie die Funktion <code>pound2gram(m)</code> mit der Variablen <code>mypounds</code> als Argument auf und weisen Sie den Rückgabewert der Variablen <code>mygrams</code> zu. (Gehen Sie davon aus, dass <code>mypounds</code> existiert).</div>
-            <div class="answer fira-code"><pre><code># Annahme: mypounds ist eine Zahl, z.B. mypounds = 2.5
-    mygrams = pound2gram(mypounds)</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">Im Folgenden sind einige Umrechnungsfaktoren für einige historische Pfunde angegeben: 500 <sup>Gramm</sup>⁄<sub>badisches Pfund</sub>, 373.24 <sup>Gramm</sup>⁄<sub>Troy Pound</sub>, 1000 <sup>Gramm</sup>⁄<sub>Dutch Pond</sub>. Rufen Sie die Funktion <code>pound2gram(m, factor)</code> mit allen drei Umrechnungsfaktoren für die Masse <code>mypounds</code> mit Wert 0.314 auf und legen Sie das Ergebnis in einem Dictionary <code>mygrams</code> mit Keys <code>'badisch'</code>, <code>'troy'</code> und <code>'dutch'</code> ab.</div>
-            <div class="answer fira-code"><pre><code>mypounds = 0.314
-    factors = {'badisch': 500, 'troy': 373.24, 'dutch': 1000}
-    mygrams = {}
-    
-    for key in factors:
-        mygrams[key] = pound2gram(mypounds, factors[key])</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">a) Schreiben Sie die Funktion <code>quantize_values(value, num_bits, scaling)</code>. Der Parameter <code>num_bits</code> soll hierbei den Default-Wert 8 haben und der Parameter <code>scaling</code> den Default-Wert 1. Die Funktion berechnet folgenden Wert: <code>floor(value * 2**num_bits / scaling)</code> und gibt ihn zurück. Des Weiteren soll sie prüfen, ob der Wert <code>scaling</code> kleiner gleich Null ist. Ist dies der Fall, soll ein <code>ValueError</code> geworfen werden. Gehen Sie davon aus, dass eine Funktion <code>floor</code> gegeben ist (z.B. aus dem <code>math</code>-Modul).</div>
-            <div class="answer fira-code"><pre><code>from math import floor
-    
-    def quantize_values(value, num_bits=8, scaling=1):
-        if scaling <= 0:
-            raise ValueError("scaling must be greater than zero")
-        return floor(value * 2**num_bits / scaling)</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">b) Rufen Sie die Funktion <code>quantize_values</code> mit dem Wert <code>value=10.1</code> und <code>scaling=100</code> auf und geben Sie den zurückgegebenen Wert aus. Der Parameter <code>num_bits</code> soll auf dem Default-Wert bleiben.</div>
-            <div class="answer fira-code"><pre><code>print(quantize_values(10.1, scaling=100))</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">c) Sie haben folgende rekursive Folge gegeben: a<sub>n</sub> = { a<sup>2</sup><sub>n-1</sub> wenn n > 0; 1.2 sonst }. Schreiben Sie die Funktion <code>rekursive_folge(n)</code>, welche den Wert der rekurisven Folge a<sub>n</sub> zurückgibt. Gehen Sie davon aus, dass der Übergabeparameter <code>n</code> vom Typ <code>int</code> ist.</div>
-            <div class="answer fira-code"><pre><code>def rekursive_folge(n):
-        if n > 0:
-            return rekursive_folge(n-1)**2
-        else:
-            return 1.2</code></pre></div>
-        </div>
-    
-        <div class="flashcard">
-            <div class="question">d) Schreiben Sie die Funktion <code>list_rek_folge(m)</code>, welche die Ergebnisse der rekurisven Folge a<sub>n</sub> von n = 0 bis n = m in einer Liste zurückgibt. Die Elemente der Liste sollen folgendermaßen angeordnet sein: a<sub>0</sub>, a<sub>1</sub>, ..., a<sub>m</sub>. Gehen Sie davon aus, dass Ihnen die Funktion <code>rekursive_folge</code> aus der letzten Teilaufgabe zur Verfügung steht und der Übergabeparameter <code>m</code> vom Typ <code>int</code> ist.</div>
-            <div class="answer fira-code"><pre><code>def list_rek_folge(m):
-        result = []
-        for i in range(m + 1):
-            result.append(rekursive_folge(i))
-        return result</code></pre></div>
-        </div>
-    
-    </div>
-    
-    <!-- KOPIER-VORLAGE FÜR NEUES KAPITEL:
-    <div class="chapter-container" data-chapter-name="Dein neuer Kapitelname">
-        <div class="flashcard">
-            <div class="question">Deine erste Frage hier...</div>
-            <div class="answer fira-code">Deine erste Antwort hier...</div>
-        </div>
-    </div>
-    -->
+        // ===================================================================================
+        // GLOBAL APP STATE
+        // ===================================================================================
+        let state = {
+            currentPage: 'dashboard',
+            categories: [], // Wird von Firestore befüllt
+            questions: [],  // Wird von Firestore befüllt
+            userProgress: JSON.parse(localStorage.getItem('userProgress')) || {}, // Fortschritt bleibt lokal
+            activeQuiz: {
+                categoryId: null,
+                queue: [],
+                currentQuestionIndex: 0,
+                mistakes: []
+            },
+            crud: {
+                editingCategory: null,
+                editingQuestion: null,
+            },
+            dbReady: false
+        };
 
-    <!-- =================================================================== -->
-</div>
+        // ===================================================================================
+        // REAL-TIME DATA LISTENERS (from Firestore)
+        // ===================================================================================
+        const categoriesCol = collection(db, 'categories');
+        const questionsCol = collection(db, 'questions');
 
+        onSnapshot(categoriesCol, (snapshot) => {
+            state.categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log("Kategorien aktualisiert:", state.categories);
+            if(state.dbReady) render();
+        });
 
-    <!-- Sidebar (wird von JS befüllt) -->
-    <aside class="w-full md:w-1/4 lg:w-1/5 bg-gray-800 h-auto md:h-full flex flex-col border-r border-gray-700">
-        <div class="p-4 border-b border-gray-700">
-            <h1 class="text-xl font-bold">Meine Lernkarten</h1>
-        </div>
-        <div class="flex-grow overflow-y-auto p-2">
-            <h2 class="text-lg font-semibold p-2 text-gray-300">Kapitel</h2>
-            <ul id="chapterList">
-                <!-- Kapitel werden hier von JavaScript eingefügt -->
-            </ul>
-        </div>
-    </aside>
+        onSnapshot(questionsCol, (snapshot) => {
+            state.questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log("Fragen aktualisiert:", state.questions);
+            if(state.dbReady) render();
+        });
 
-    <!-- Main Content (wird von JS gesteuert) -->
-    <main class="w-full md:w-3/4 lg:w-4/5 h-full flex flex-col p-4 sm:p-6 lg:p-8">
-        <h2 id="main-header" class="text-2xl font-bold text-gray-200 mb-4">Wähle ein Kapitel</h2>
-        
-        <div id="card-display-area" class="flex-grow bg-gray-800 rounded-lg p-6 flex items-center justify-center relative">
-            
-            <!-- Startansicht -->
-            <div id="welcome-view" class="text-center">
-                <h3 class="text-xl text-gray-400">Willkommen!</h3>
-                <p class="text-gray-500 mt-2">Wähle links ein Kapitel aus, um zu beginnen.</p>
-            </div>
+        // Warten, bis beide Listener einmal geladen haben, um die App zu starten
+        Promise.all([
+            new Promise(res => onSnapshot(categoriesCol, res)),
+            new Promise(res => onSnapshot(questionsCol, res))
+        ]).then(() => {
+            console.log("Datenbank bereit!");
+            state.dbReady = true;
+            render();
+        });
 
-            <!-- Ansicht für leere Kapitel -->
-            <div id="no-cards-view" class="text-center hidden">
-                <h3 class="text-xl text-gray-400">Dieses Kapitel ist leer.</h3>
-                <p class="text-gray-500 mt-2">Füge Karten in der HTML-Datei hinzu, um hier zu lernen.</p>
-            </div>
+        // ===================================================================================
+        // RENDER FUNCTIONS (unverändert, aber jetzt mit globalen Daten)
+        // ===================================================================================
+        const appContainer = document.getElementById('app');
 
-            <!-- Kapitel abgeschlossen Ansicht -->
-            <div id="chapter-complete-view" class="text-center hidden">
-                <h3 class="text-2xl font-bold text-green-400">🎉 Kapitel abgeschlossen!</h3>
-                <button id="restart-chapter-btn" class="mt-6 px-5 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-md transition-colors duration-200">Nochmal starten</button>
-            </div>
-
-            <!-- Die eigentliche Karteikarten-Ansicht -->
-            <div id="card-view" class="w-full h-full flex flex-col hidden">
-                <div class="flex-grow flex flex-col justify-center">
-                    <div class="mb-4">
-                        <p class="text-sm text-indigo-400 mb-2">AUFGABE</p>
-                        <p id="question" class="text-xl md:text-2xl text-gray-200"></p>
+        function render() {
+            appContainer.innerHTML = '';
+            const header = document.createElement('header');
+            header.innerHTML = `
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-2xl md:text-3xl">LERN-AVENTURE</h1>
+                    <div>
+                        <button class="btn btn-secondary" data-nav="dashboard">Dashboard</button>
+                        <button class="btn btn-secondary ml-4" data-nav="crud">Kodex</button>
                     </div>
-                    <div class="my-4">
-                         <label for="user-answer-input" class="block text-sm font-medium text-gray-300 mb-1">Deine Antwort</label>
-                         <textarea id="user-answer-input" rows="6" placeholder="Schreibe deinen Code oder deine Antwort hier..." class="w-full bg-gray-900 border border-gray-600 rounded-md px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 fira-code"></textarea>
-                    </div>
-                    <button id="check-answer-btn" class="my-2 self-center px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded-md transition-colors duration-200 font-semibold">Prüfen</button>
-                    <div id="feedback-section" class="hidden mt-4">
-                        <div id="feedback-message" class="text-center font-bold p-3 rounded-md mb-4"></div>
-                        <p class="text-sm text-green-400 mb-2">KORREKTE LÖSUNG</p>
-                        <pre class="bg-gray-900 rounded-md p-4 w-full overflow-x-auto"><code id="answer" class="fira-code text-base text-gray-300"></code></pre>
-                        <div class="text-center mt-4 space-x-4">
-                             <button id="know-it-anyway-btn" class="hidden px-4 py-2 bg-yellow-600 hover:bg-yellow-500 text-sm rounded-md transition-colors duration-200">Als richtig werten</button>
-                             <button id="try-next-card-btn" class="hidden px-4 py-2 bg-gray-600 hover:bg-gray-500 text-sm rounded-md transition-colors duration-200">Nächste versuchen</button>
+                </div>
+            `;
+            appContainer.appendChild(header);
+
+            switch (state.currentPage) {
+                case 'dashboard': renderDashboard(); break;
+                case 'quiz': renderQuiz(); break;
+                case 'crud': renderCrud(); break;
+            }
+        }
+        
+        function renderDashboard() {
+            const container = document.createElement('div');
+            container.innerHTML = `<h2 class="text-xl mb-6">Wähle dein Level:</h2>`;
+
+            if (state.categories.length === 0) {
+                container.innerHTML += `<p>Noch keine Kategorien erstellt. Gehe zum 'Kodex', um welche hinzuzufügen!</p>`;
+            } else {
+                const grid = document.createElement('div');
+                grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+                state.categories.forEach(cat => {
+                    const catQuestions = state.questions.filter(q => q.category_id === cat.id);
+                    const learnedCount = catQuestions.filter(q => state.userProgress[q.id] && state.userProgress[q.id].interval_days > 0).length;
+                    const progressPercentage = catQuestions.length > 0 ? Math.round((learnedCount / catQuestions.length) * 100) : 0;
+
+                    const card = document.createElement('div');
+                    card.className = 'pixel-border p-6 flex flex-col justify-between';
+                    card.innerHTML = `
+                        <div>
+                            <h3 class="text-lg mb-2">${cat.name}</h3>
+                            <p class="text-sm mb-4">${cat.description}</p>
+                            <p class="text-xs mb-2">${catQuestions.length} Fragen</p>
                         </div>
+                        <div>
+                            <div class="w-full bg-gray-300 h-6 border-2 border-black mb-4">
+                                <div class="bg-green-500 h-full text-center text-white text-xs leading-6" style="width: ${progressPercentage}%">${progressPercentage}%</div>
+                            </div>
+                            <button class="btn btn-primary w-full" data-start-quiz="${cat.id}" ${catQuestions.length === 0 ? 'disabled' : ''}>
+                                ${catQuestions.length === 0 ? 'Keine Fragen' : 'Starten!'}
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+                container.appendChild(grid);
+            }
+            appContainer.appendChild(container);
+        }
+
+        function renderQuiz() {
+            const quiz = state.activeQuiz;
+            if (quiz.queue.length === 0 || quiz.currentQuestionIndex >= quiz.queue.length) {
+                renderQuizComplete();
+                return;
+            }
+            const question = quiz.queue[quiz.currentQuestionIndex];
+            const container = document.createElement('div');
+            container.id = 'quiz-container';
+            container.className = 'pixel-border p-6';
+            const sessionProgress = Math.round(((quiz.currentQuestionIndex) / quiz.queue.length) * 100);
+            let questionHTML = `
+                <div class="mb-4">
+                    <p class="text-sm text-gray-600">Frage ${quiz.currentQuestionIndex + 1} von ${quiz.queue.length}</p>
+                    <div class="w-full bg-gray-300 h-4 border-2 border-black my-2">
+                        <div class="bg-blue-500 h-full" style="width: ${sessionProgress}%"></div>
                     </div>
                 </div>
-                <div class="flex-shrink-0 flex justify-center items-center mt-6">
-                    <span id="card-counter" class="text-gray-400"></span>
-                </div>
-            </div>
-        </div>
-    </main>
+                <h3 class="text-lg mb-6">${question.content.prompt}</h3>
+            `;
+            switch (question.question_type) {
+                case 'mcq':
+                    questionHTML += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${question.content.options.map((opt, index) => `<button class="btn btn-secondary text-left p-4" data-answer-mcq="${index}">${opt}</button>`).join('')}</div>`;
+                    break;
+                case 'code_completion':
+                    questionHTML += `<div><pre class="bg-gray-800 text-white p-4 mb-4 text-sm">${question.content.starter_code}</pre><textarea id="code-input" class="code-editor" placeholder="Dein Code hier..."></textarea><div class="mt-4 flex justify-end"><button class="btn btn-primary" id="submit-code">Lösung prüfen</button></div></div>`;
+                    break;
+            }
+            container.innerHTML = questionHTML;
+            appContainer.appendChild(container);
+        }
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- Zustand der App ---
-        let chapters = [];
-        let currentChapterIndex = -1;
-        let currentCard = null;
-        let unansweredCardIndices = [];
+        function renderQuizComplete() {
+            const container = document.createElement('div');
+            container.className = 'pixel-border p-8 text-center';
+            container.innerHTML = `<h2 class="text-2xl mb-4">Level geschafft!</h2><p class="mb-6">Gute Arbeit! Du hast alle Fragen für diese Sitzung beantwortet.</p>${state.activeQuiz.mistakes.length > 0 ? `<h3 class="text-lg mb-2">Fragen zur Wiederholung:</h3><ul class="mb-6 text-left list-disc list-inside">${state.activeQuiz.mistakes.map(q => `<li>${q.content.prompt}</li>`).join('')}</ul>` : '<p class="mb-6 text-green-600">Du hast keine Fehler gemacht!</p>'}<button class="btn btn-primary" data-nav="dashboard">Zurück zum Dashboard</button>`;
+            appContainer.appendChild(container);
+        }
 
-        // --- DOM-Elemente ---
-        const chapterListEl = document.getElementById('chapterList');
-        const mainHeaderEl = document.getElementById('main-header');
-        
-        const welcomeView = document.getElementById('welcome-view');
-        const noCardsView = document.getElementById('no-cards-view');
-        const chapterCompleteView = document.getElementById('chapter-complete-view');
-        const cardView = document.getElementById('card-view');
-        
-        const questionEl = document.getElementById('question');
-        const userAnswerInput = document.getElementById('user-answer-input');
-        const checkAnswerBtn = document.getElementById('check-answer-btn');
-        const cardCounterEl = document.getElementById('card-counter');
-        
-        const feedbackSection = document.getElementById('feedback-section');
-        const feedbackMessage = document.getElementById('feedback-message');
-        const answerEl = document.getElementById('answer');
-        const knowItAnywayBtn = document.getElementById('know-it-anyway-btn');
-        const tryNextCardBtn = document.getElementById('try-next-card-btn');
-        const restartChapterBtn = document.getElementById('restart-chapter-btn');
-
-        // --- 1. Daten aus dem DOM auslesen ---
-        function parseDataFromDOM() {
-            const chapterNodes = document.querySelectorAll('#data-storage .chapter-container');
-            chapterNodes.forEach(chapterNode => {
-                const chapterName = chapterNode.dataset.chapterName || 'Unbenanntes Kapitel';
-                const cards = [];
-                const cardNodes = chapterNode.querySelectorAll('.flashcard');
-                cardNodes.forEach(cardNode => {
-                    const question = cardNode.querySelector('.question')?.innerHTML || 'Keine Frage gefunden';
-                    // Wichtig: Wir brauchen den reinen Text für den Vergleich
-                    const answerHTML = cardNode.querySelector('.answer')?.innerHTML || 'Keine Antwort gefunden';
-                    const answerText = cardNode.querySelector('.answer')?.textContent || 'Keine Antwort gefunden';
-                    cards.push({ question, answerHTML, answerText });
+        function renderCrud() {
+            const container = document.createElement('div');
+            container.innerHTML = `<div class="flex justify-between items-center mb-6"><h2 class="text-xl">Kodex der Fragen</h2><button id="add-category-btn" class="btn btn-primary">Neue Kategorie</button></div>`;
+            state.categories.forEach(cat => {
+                const catSection = document.createElement('div');
+                catSection.className = 'pixel-border p-4 mb-6';
+                catSection.innerHTML = `<div class="flex justify-between items-center mb-4"><h3 class="text-lg">${cat.name}</h3><div><button class="btn btn-secondary text-xs" data-add-question="${cat.id}">Frage +</button><button class="btn btn-error text-xs ml-2" data-delete-category="${cat.id}">X</button></div></div>`;
+                const questionsList = document.createElement('ul');
+                state.questions.filter(q => q.category_id === cat.id).forEach(q => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center p-2 border-b border-gray-300';
+                    li.innerHTML = `<span>${q.content.prompt.substring(0, 50)}...</span><div><button class="btn btn-secondary text-xs" data-edit-question="${q.id}">Edit</button><button class="btn btn-error text-xs ml-2" data-delete-question="${q.id}">X</button></div>`;
+                    questionsList.appendChild(li);
                 });
-                chapters.push({ name: chapterName, cards });
+                catSection.appendChild(questionsList);
+                container.appendChild(catSection);
             });
+            appContainer.appendChild(container);
+            const modalContainer = document.createElement('div');
+            modalContainer.id = 'crud-modal';
+            modalContainer.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden';
+            appContainer.appendChild(modalContainer);
         }
 
-        // --- 2. UI aufbauen ---
-        function renderChapterList() {
-            chapterListEl.innerHTML = '';
-            chapters.forEach((chapter, index) => {
-                const li = document.createElement('li');
-                const isActive = index === currentChapterIndex;
-                li.innerHTML = `<a href="#" data-index="${index}" class="chapter-item block px-4 py-3 rounded-md transition-colors duration-200 ${isActive ? 'bg-indigo-600 text-white' : 'text-gray-300 hover:bg-gray-700'}"><span class="truncate">${chapter.name}</span></a>`;
-                chapterListEl.appendChild(li);
-            });
-        }
-        
-        function updateMainView() {
-            welcomeView.classList.add('hidden');
-            noCardsView.classList.add('hidden');
-            chapterCompleteView.classList.add('hidden');
-            cardView.classList.add('hidden');
-
-            if (currentChapterIndex === -1) {
-                mainHeaderEl.textContent = 'Wähle ein Kapitel';
-                welcomeView.classList.remove('hidden');
-                return;
+        function renderCrudModal() {
+            const modalContainer = document.getElementById('crud-modal');
+            modalContainer.innerHTML = '';
+            modalContainer.classList.remove('hidden');
+            const formContainer = document.createElement('div');
+            formContainer.className = 'pixel-border p-8 w-full max-w-2xl max-h-full overflow-y-auto';
+            let formHTML = '';
+            if (state.crud.editingCategory) {
+                const cat = state.crud.editingCategory;
+                formHTML = `<h3 class="text-xl mb-4">${cat.id ? 'Kategorie bearbeiten' : 'Neue Kategorie erstellen'}</h3><form id="category-form"><div class="mb-4"><label for="cat-name" class="block mb-1">Name</label><input type="text" id="cat-name" class="w-full p-2 border-2 border-black" value="${cat.name || ''}" required></div><div class="mb-4"><label for="cat-desc" class="block mb-1">Beschreibung</label><textarea id="cat-desc" class="w-full p-2 border-2 border-black">${cat.description || ''}</textarea></div><div class="flex justify-end gap-4"><button type="button" id="cancel-modal" class="btn btn-secondary">Abbrechen</button><button type="submit" class="btn btn-primary">Speichern</button></div></form>`;
+            } else if (state.crud.editingQuestion) {
+                const q = state.crud.editingQuestion;
+                const isNew = !q.id;
+                formHTML = `<h3 class="text-xl mb-4">${isNew ? 'Neue Frage erstellen' : 'Frage bearbeiten'}</h3><form id="question-form"><div class="mb-4"><label for="q-type" class="block mb-1">Fragetyp</label><select id="q-type" class="w-full p-2 border-2 border-black"><option value="mcq" ${q.question_type === 'mcq' ? 'selected' : ''}>Multiple Choice</option><option value="code_completion" ${q.question_type === 'code_completion' ? 'selected' : ''}>Code-Vervollständigung</option></select></div><div id="q-content-fields"></div><div class="flex justify-end gap-4 mt-6"><button type="button" id="cancel-modal" class="btn btn-secondary">Abbrechen</button><button type="submit" class="btn btn-primary">Speichern</button></div></form>`;
             }
-            
-            const chapter = chapters[currentChapterIndex];
-            mainHeaderEl.textContent = chapter.name;
+            formContainer.innerHTML = formHTML;
+            modalContainer.appendChild(formContainer);
+            if (state.crud.editingQuestion) renderQuestionFields();
+        }
 
-            if (chapter.cards.length === 0) {
-                noCardsView.classList.remove('hidden');
-            } else if (unansweredCardIndices.length === 0) {
-                chapterCompleteView.classList.remove('hidden');
-            } else {
-                cardView.classList.remove('hidden');
+        function renderQuestionFields() {
+            const q = state.crud.editingQuestion;
+            const container = document.getElementById('q-content-fields');
+            if (!container) return;
+            let fieldsHTML = `<div class="mb-4"><label for="q-prompt" class="block mb-1">Frage / Aufforderung</label><textarea id="q-prompt" class="w-full p-2 border-2 border-black" required>${q.content?.prompt || ''}</textarea></div>`;
+            const type = document.getElementById('q-type')?.value || q.question_type;
+            if (type === 'mcq') {
+                const options = q.content?.options || ['', '', '', ''];
+                const correct_index = q.content?.correct_index ?? -1;
+                fieldsHTML += `${options.map((opt, i) => `<div class="flex items-center mb-2"><input type="radio" name="correct_answer" value="${i}" id="radio-${i}" class="mr-2" ${correct_index === i ? 'checked' : ''} required><input type="text" class="w-full p-2 border-2 border-black q-option" value="${opt}" placeholder="Antwort ${i+1}"></div>`).join('')}<div class="mb-4"><label for="q-explanation" class="block mb-1">Erklärung</label><textarea id="q-explanation" class="w-full p-2 border-2 border-black">${q.content?.explanation || ''}</textarea></div>`;
+            } else if (type === 'code_completion') {
+                fieldsHTML += `<div class="mb-4"><label for="q-starter-code" class="block mb-1">Start-Code</label><textarea id="q-starter-code" class="w-full p-2 border-2 border-black code-editor">${q.content?.starter_code || ''}</textarea></div><div class="mb-4"><label for="q-solution" class="block mb-1">Musterlösung</label><textarea id="q-solution" class="w-full p-2 border-2 border-black code-editor">${q.content?.solution || ''}</textarea></div>`;
             }
+            container.innerHTML = fieldsHTML;
         }
 
-        // --- 3. Lernlogik ---
-        function startChapter(chapterIndex) {
-            currentChapterIndex = chapterIndex;
-            const chapter = chapters[chapterIndex];
-            unansweredCardIndices = Array.from(Array(chapter.cards.length).keys()); // [0, 1, 2, ...]
-            
-            renderChapterList();
-            showNextRandomCard();
-        }
-
-        function showNextRandomCard() {
-            if (unansweredCardIndices.length === 0) {
-                updateMainView();
-                return;
+        // ===================================================================================
+        // EVENT HANDLERS & LOGIC (mit Firestore-Integration)
+        // ===================================================================================
+        document.body.addEventListener('click', async e => {
+            if (e.target.matches('[data-nav]')) { state.currentPage = e.target.dataset.nav; render(); }
+            if (e.target.matches('[data-start-quiz]')) {
+                const categoryId = e.target.dataset.startQuiz;
+                const questionsForCategory = state.questions.filter(q => q.category_id === categoryId);
+                for (let i = questionsForCategory.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[questionsForCategory[i], questionsForCategory[j]] = [questionsForCategory[j], questionsForCategory[i]]; }
+                state.activeQuiz = { categoryId, queue: questionsForCategory, currentQuestionIndex: 0, mistakes: [] };
+                state.currentPage = 'quiz';
+                render();
             }
-
-            const randomIndexInPool = Math.floor(Math.random() * unansweredCardIndices.length);
-            const cardIndex = unansweredCardIndices[randomIndexInPool];
-            currentCard = { ...chapters[currentChapterIndex].cards[cardIndex], originalIndex: cardIndex };
-
-            displayCard(currentCard);
-            updateMainView();
-        }
-
-        function displayCard(card) {
-            questionEl.innerHTML = card.question;
-            answerEl.innerHTML = card.answerHTML; // Setzt das HTML für die Anzeige
-            
-            const totalCards = chapters[currentChapterIndex].cards.length;
-            cardCounterEl.textContent = `Verbleibend: ${unansweredCardIndices.length} / ${totalCards}`;
-            
-            userAnswerInput.value = '';
-            userAnswerInput.focus();
-            feedbackSection.classList.add('hidden');
-            knowItAnywayBtn.classList.add('hidden');
-            tryNextCardBtn.classList.add('hidden');
-        }
-
-        function checkAnswer() {
-            if (!currentCard) return;
-            const normalize = (str) => str.replace(/\s+/g, ' ').trim();
-            const userAnswer = normalize(userAnswerInput.value);
-            const correctAnswer = normalize(currentCard.answerText);
-
-            feedbackSection.classList.remove('hidden');
-            
-            if (userAnswer === correctAnswer) {
-                feedbackMessage.textContent = 'Richtig!';
-                feedbackMessage.className = 'text-center font-bold p-3 rounded-md mb-4 bg-green-500/20 text-green-400';
-                setTimeout(handleCorrectAnswer, 1200);
-            } else {
-                feedbackMessage.textContent = 'Falsch. Sieh dir die Lösung an.';
-                feedbackMessage.className = 'text-center font-bold p-3 rounded-md mb-4 bg-red-500/20 text-red-400';
-                knowItAnywayBtn.classList.remove('hidden');
-                tryNextCardBtn.classList.remove('hidden');
+            if (e.target.matches('[data-answer-mcq]')) { handleAnswer(parseInt(e.target.dataset.answerMcq) === state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex].content.correct_index); }
+            if (e.target.id === 'submit-code') {
+                const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
+                const userInput = document.getElementById('code-input').value;
+                const solutionHTML = `<div class="mt-6 p-4 border-t-4 border-black"><h4 class="font-bold mb-2">Deine Lösung:</h4><pre class="bg-gray-200 p-2 mb-4">${userInput}</pre><h4 class="font-bold mb-2">Musterlösung:</h4><pre class="bg-gray-200 p-2 mb-4">${question.content.solution}</pre><p class="text-center my-4">War deine Lösung richtig?</p><div class="flex justify-center gap-4"><button class="btn btn-error" id="self-eval-wrong">Falsch</button><button class="btn btn-success" id="self-eval-correct">Richtig</button></div></div>`;
+                e.target.closest('div').innerHTML = solutionHTML;
             }
-        }
-
-        function handleCorrectAnswer() {
-            if (!currentCard) return;
-            // Entferne die Karte aus dem Pool der unbeantworteten Karten
-            unansweredCardIndices = unansweredCardIndices.filter(index => index !== currentCard.originalIndex);
-            showNextRandomCard();
-        }
-
-        // --- 4. Event-Handler ---
-        chapterListEl.addEventListener('click', (e) => {
-            const chapterItem = e.target.closest('.chapter-item');
-            if (chapterItem) {
-                e.preventDefault();
-                startChapter(parseInt(chapterItem.dataset.index, 10));
+            if (e.target.id === 'self-eval-correct') handleAnswer(true);
+            if (e.target.id === 'self-eval-wrong') handleAnswer(false);
+            if (e.target.id === 'add-category-btn') { state.crud.editingCategory = {}; state.crud.editingQuestion = null; renderCrudModal(); }
+            if (e.target.matches('[data-add-question]')) { state.crud.editingQuestion = { category_id: e.target.dataset.addQuestion }; state.crud.editingCategory = null; renderCrudModal(); }
+            if (e.target.matches('[data-edit-question]')) {
+                const questionId = e.target.dataset.editQuestion;
+                state.crud.editingQuestion = JSON.parse(JSON.stringify(state.questions.find(q => q.id === questionId)));
+                state.crud.editingCategory = null;
+                renderCrudModal();
+            }
+            if (e.target.id === 'cancel-modal' || e.target.id === 'crud-modal') { document.getElementById('crud-modal').classList.add('hidden'); }
+            if (e.target.matches('[data-delete-category]')) {
+                const catId = e.target.dataset.deleteCategory;
+                if (confirm('Sicher, dass du diese Kategorie und ALLE ihre Fragen löschen willst?')) {
+                    const batch = writeBatch(db);
+                    const questionsToDelete = state.questions.filter(q => q.category_id === catId);
+                    questionsToDelete.forEach(q => batch.delete(doc(db, "questions", q.id)));
+                    batch.delete(doc(db, "categories", catId));
+                    await batch.commit();
+                }
+            }
+            if (e.target.matches('[data-delete-question]')) {
+                const qId = e.target.dataset.deleteQuestion;
+                if (confirm('Sicher, dass du diese Frage löschen willst?')) {
+                    await deleteDoc(doc(db, "questions", qId));
+                }
             }
         });
 
-        checkAnswerBtn.addEventListener('click', checkAnswer);
-        userAnswerInput.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                checkAnswer();
+        document.body.addEventListener('submit', async e => {
+            e.preventDefault();
+            if (e.target.id === 'category-form') {
+                const name = document.getElementById('cat-name').value;
+                const description = document.getElementById('cat-desc').value;
+                const cat = state.crud.editingCategory;
+                const data = { name, description };
+                if (cat.id) { await setDoc(doc(db, "categories", cat.id), data); } 
+                else { await addDoc(collection(db, "categories"), data); }
+                document.getElementById('crud-modal').classList.add('hidden');
+            }
+            if (e.target.id === 'question-form') {
+                const q = state.crud.editingQuestion;
+                const data = {
+                    category_id: q.category_id,
+                    question_type: document.getElementById('q-type').value,
+                    content: { prompt: document.getElementById('q-prompt').value }
+                };
+                if (data.question_type === 'mcq') {
+                    data.content.options = Array.from(document.querySelectorAll('.q-option')).map(inp => inp.value);
+                    data.content.correct_index = parseInt(document.querySelector('input[name="correct_answer"]:checked').value);
+                    data.content.explanation = document.getElementById('q-explanation').value;
+                } else if (data.question_type === 'code_completion') {
+                    data.content.starter_code = document.getElementById('q-starter-code').value;
+                    data.content.solution = document.getElementById('q-solution').value;
+                }
+                if (q.id) { await setDoc(doc(db, "questions", q.id), data); } 
+                else { await addDoc(collection(db, "questions"), data); }
+                document.getElementById('crud-modal').classList.add('hidden');
             }
         });
 
-        knowItAnywayBtn.addEventListener('click', handleCorrectAnswer);
-        tryNextCardBtn.addEventListener('click', showNextRandomCard);
-        restartChapterBtn.addEventListener('click', () => {
-            if (currentChapterIndex !== -1) {
-                startChapter(currentChapterIndex);
-            }
-        });
+        document.body.addEventListener('change', e => { if (e.target.id === 'q-type') { state.crud.editingQuestion.question_type = e.target.value; const promptText = document.getElementById('q-prompt')?.value || ''; if (!state.crud.editingQuestion.content) state.crud.editingQuestion.content = {}; state.crud.editingQuestion.content.prompt = promptText; renderQuestionFields(); } });
 
-        // --- App starten ---
-        function main() {
-            parseDataFromDOM();
-            renderChapterList();
-            updateMainView();
+        function handleAnswer(isCorrect) {
+            const quizContainer = document.getElementById('quiz-container');
+            const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
+            // Update local progress, no need to write to DB for this
+            if (!isCorrect) state.activeQuiz.mistakes.push(question);
+            quizContainer.classList.add(isCorrect ? 'correct-flash-anim' : 'shake-anim');
+            setTimeout(() => { state.activeQuiz.currentQuestionIndex++; render(); }, 700);
         }
-
-        main();
-    });
     </script>
 </body>
 </html>
