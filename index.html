@@ -3,38 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retro Python Lernplattform</title>
+    <title>Python Lernplattform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* ================================================================== */
+        /* CSS-Variablen basierend auf Ihrer finalen Auswahl */
+        /* ================================================================== */
         :root {
-            --background: #f7fff7; --text: #080810; --error: #e71839; --success: #52c64a;
-            --accent: #1094de; --warning: #f7a518; --border-color: #080810;
-            --font-body: 'Pixelify Sans', sans-serif; --font-title: 'Press Start 2P', cursive;
+            /* Feste Werte */
+            --radius-ebene1: 24px;
+            --radius-ebene2: 12px;
+
+            /* Dynamische Werte aus Ihrer Vorgabe */
+            --opacity-bg-ebene1: 0.05;
+            --opacity-bg-ebene2-basis: 0.1;
+            --opacity-border-ebene2-basis: 0.15;
+            --opacity-shadow-ebene2-basis: 0.19;
+            --farbe-auswahl: rgba(0, 253, 244, 0.5);
+            --farbe-richtig-bg: rgba(0, 249, 0, 0.6);
+            --farbe-richtig-border: rgba(0, 249, 0, 0.4);
+            --farbe-richtig-shadow: rgba(0, 249, 0, 0.2);
+            --farbe-falsch-bg: rgba(255, 38, 0, 0.6);
+            --farbe-falsch-border: rgba(255, 38, 0, 0.4);
+            --farbe-falsch-shadow: rgba(255, 38, 0, 0.2);
+            --leucht-staerke: 10px;
+            --leucht-unschaerfe: 10px;
+            --leucht-farbe: rgba(34, 197, 94, 0.7);
         }
-        body { background-color: var(--background); color: var(--text); font-family: var(--font-body); font-size: 18px; }
-        h1, h2, h3 { font-family: var(--font-title); letter-spacing: 1px; }
-        .pixel-border { border: 4px solid var(--border-color); box-shadow: 6px 6px 0 var(--border-color); background-color: white; }
-        .btn { font-family: var(--font-title); padding: 10px 20px; border: 3px solid var(--border-color); text-transform: uppercase; font-size: 14px; cursor: pointer; transition: all 0.1s ease-in-out; box-shadow: 4px 4px 0 var(--border-color); }
-        .btn:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--border-color); }
-        .btn:active { transform: translate(4px, 4px); box-shadow: none; }
-        .btn-primary { background-color: var(--accent); color: white; } .btn-success { background-color: var(--success); color: white; }
-        .btn-error { background-color: var(--error); color: white; } .btn-secondary { background-color: var(--warning); color: var(--text); }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); } 20%, 40%, 60%, 80% { transform: translateX(5px); } }
-        .shake-anim { animation: shake 0.5s ease-in-out; }
-        @keyframes correct-flash { 0%, 100% { box-shadow: 6px 6px 0 var(--border-color); } 50% { box-shadow: 0 0 20px 10px var(--success); } }
-        .correct-flash-anim { animation: correct-flash 0.7s ease-in-out; }
-        textarea.code-editor { font-family: 'Courier New', Courier, monospace; background-color: #1e1e1e; color: #d4d4d4; border: 2px solid var(--border-color); padding: 1rem; width: 100%; min-height: 200px; line-height: 1.5; }
-        .error-message { background-color: var(--error); color: white; border: 4px solid var(--border-color); padding: 1rem; }
+
+        /* ================================================================== */
+        /* Basis- und adaptive Stile */
+        /* ================================================================== */
+        /* KORREKTUR: Stellt sicher, dass der Hintergrund die gesamte Seite füllt */
+        html, body {
+            height: 100%;
+        }
+        body {
+            background-color: #1a2a45; 
+            background-image: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            background-attachment: fixed; /* Verhindert das Wiederholen des Verlaufs */
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3 {
+            font-weight: 700;
+        }
+
+        /* Hauptcontainer im Glas-Stil */
+        .glass-ui {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, var(--opacity-bg-ebene1));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-ebene1);
+        }
+        
+        /* Basis-Stil für Antwort-Buttons (MCQ) */
+        .answer-btn {
+            transition: all 0.3s ease;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            border-radius: var(--radius-ebene2);
+            background-color: rgba(255, 255, 255, var(--opacity-bg-ebene2-basis));
+            border: 2px solid rgba(255, 255, 255, var(--opacity-border-ebene2-basis));
+            box-shadow: 0 4px 15px 0 rgba(0, 0, 0, var(--opacity-shadow-ebene2-basis));
+            color: #e5e7eb;
+        }
+
+        /* Interaktions-Wrapper für Antwort-Buttons */
+        .interactive-btn {
+            transition: transform 0.2s ease;
+        }
+        .interactive-btn:hover { 
+            transform: translateY(-2px); 
+        }
+        .interactive-btn.chosen .answer-btn {
+            background-color: var(--farbe-auswahl);
+            border-color: var(--farbe-auswahl);
+        }
+
+        /* Zustands-Klassen für die Lösungsansicht */
+        .richtig-gewaehlt {
+            background-color: var(--farbe-richtig-bg);
+            border-color: var(--farbe-richtig-border);
+            box-shadow: 0 4px 15px 0 var(--farbe-richtig-shadow);
+            color: white;
+        }
+        .falsch-gewaehlt {
+            background-color: var(--farbe-falsch-bg);
+            border-color: var(--farbe-falsch-border);
+            box-shadow: 0 4px 15px 0 var(--farbe-falsch-shadow);
+            color: white;
+        }
+        
+        .richtig-nicht-gewaehlt { animation: leuchte-rand 2s infinite; }
+        @keyframes leuchte-rand {
+            0%, 100% { box-shadow: 0 0 5px rgba(255,255,255,0.2), 0 0 var(--leucht-unschaerfe) var(--leucht-farbe); }
+            50% { box-shadow: 0 0 10px rgba(255,255,255,0.4), 0 0 var(--leucht-unschaerfe) var(--leucht-staerke) var(--leucht-farbe); }
+        }
+        
+        /* Stile für die Fortschrittsanzeige */
+        .progress-bar-container {
+            position: relative;
+            height: 16px;
+            border-radius: 9999px;
+            background-color: rgba(255, 255, 255, var(--opacity-bg-ebene2-basis));
+            border: 1px solid rgba(255, 255, 255, var(--opacity-border-ebene2-basis));
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, var(--opacity-shadow-ebene2-basis));
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-radius: 9999px;
+            background-color: var(--farbe-richtig-bg);
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Adaptive Stile für generische Buttons */
+        .btn {
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: var(--radius-ebene2);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f3f4f6;
+        }
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .btn-primary { background-color: rgba(0, 249, 0, 0.6); border-color: rgba(0, 249, 0, 0.4); }
+        .btn-primary:hover { background-color: rgba(0, 249, 0, 0.7); }
+        .btn-error { background-color: rgba(255, 38, 0, 0.6); border-color: rgba(255, 38, 0, 0.4); }
+        .btn-error:hover { background-color: rgba(255, 38, 0, 0.7); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Modernisierter Code-Editor */
+        textarea.code-editor {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(0, 0, 0, 0.3);
+            color: #d4d4d4;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            width: 100%;
+            min-height: 200px;
+            line-height: 1.5;
+            border-radius: var(--radius-ebene2);
+        }
+        input, select, textarea {
+             background-color: rgba(0, 0, 0, 0.2);
+             border: 1px solid rgba(255, 255, 255, 0.2);
+             border-radius: 8px;
+             padding: 0.5rem;
+             color: #f3f4f6;
+        }
+        input::placeholder, textarea::placeholder {
+            color: #9ca3af;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--farbe-auswahl);
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div id="app" class="max-w-4xl mx-auto">
         <!-- Initialer Ladebildschirm -->
-        <div id="loading-screen" class="text-center p-8 pixel-border">
+        <div id="loading-screen" class="text-center p-8 glass-ui">
             <h2 class="text-xl mb-4">Lade Daten aus der Cloud...</h2>
             <p>Verbinde mit der zentralen Datenbank.</p>
         </div>
@@ -42,13 +190,16 @@
 
     <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, addDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, addDoc, setDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // ===================================================================================
-        // DEINE AUFGABE: Ersetze die Platzhalter unten mit den Werten aus deinem Screenshot!
+        // Firebase Konfiguration & Initialisierung
         // ===================================================================================
-       const firebaseConfig = {
+        const appContainer = document.getElementById('app');
+        let db;
+        
+        const firebaseConfig = {
             apiKey: "AIzaSyDhnXdcAc-wIcL4AdObCOc4VNNZzNaZcXE",
             authDomain: "python-lernkarten.firebaseapp.com",
             projectId: "python-lernkarten",
@@ -56,41 +207,15 @@
             messagingSenderId: "819930642858",
             appId: "1:819930642858:web:596fc0cb13d7c6d890d3d3",
             measurementId: "G-Q7G1XYZQ08"
-            };
+        };
 
-        const appContainer = document.getElementById('app');
-
-        // NEUE PRÜFUNG: Überprüfen, ob die Konfiguration ausgefüllt wurde
-        if (firebaseConfig.apiKey === "DEIN_API_KEY") {
-            appContainer.innerHTML = `
-                <div class="pixel-border error-message">
-                    <h2 class="text-xl mb-4">FEHLER: Firebase nicht konfiguriert!</h2>
-                    <p>Bitte öffne die HTML-Datei und ersetze die Platzhalter im 'firebaseConfig'-Objekt mit deinen echten Daten aus der Firebase-Konsole.</p>
-                </div>
-            `;
-            throw new Error("Firebase-Konfiguration ist nicht ausgefüllt.");
-        }
-
-        // ===================================================================================
-        // Firebase Initialisierung mit Fehlerbehandlung
-        // ===================================================================================
-        let db;
         try {
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             console.log("Firebase erfolgreich initialisiert.");
         } catch (error) {
             console.error("Firebase Initialisierungsfehler:", error);
-            appContainer.innerHTML = `
-                <div class="pixel-border error-message">
-                    <h2 class="text-xl mb-4">FEHLER: Verbindung zur Datenbank fehlgeschlagen!</h2>
-                    <p>Überprüfe die Browser-Konsole (F12) für Details. Mögliche Ursachen:</p>
-                    <ul class="list-disc list-inside mt-2">
-                        <li>Die 'firebaseConfig'-Werte sind falsch.</li>
-                        <li>Deine Domain ist nicht in Firebase als autorisierte Domain hinzugefügt.</li>
-                    </ul>
-                </div>
-            `;
+            appContainer.innerHTML = `<div class="glass-ui p-8 text-center"><h2 class="text-xl mb-4 text-red-400">FEHLER: Verbindung zur Datenbank fehlgeschlagen!</h2><p>Die App konnte nicht initialisiert werden. Überprüfe die Browser-Konsole (F12) für Details.</p></div>`;
             throw error;
         }
 
@@ -101,7 +226,6 @@
             currentPage: 'dashboard',
             categories: [],
             questions: [],
-            userProgress: JSON.parse(localStorage.getItem('userProgress')) || {},
             activeQuiz: { categoryId: null, queue: [], currentQuestionIndex: 0, mistakes: [] },
             crud: { editingCategory: null, editingQuestion: null },
             dbReady: false
@@ -126,35 +250,29 @@
 
         onSnapshot(categoriesCol, (snapshot) => {
             state.categories = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log("Kategorien aktualisiert:", state.categories);
             initialCategoriesLoaded = true;
             checkDbReady();
-        }, (error) => {
-            console.error("Fehler beim Laden der Kategorien: ", error);
-        });
+        }, (error) => console.error("Fehler beim Laden der Kategorien: ", error));
 
         onSnapshot(questionsCol, (snapshot) => {
             state.questions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log("Fragen aktualisiert:", state.questions);
             initialQuestionsLoaded = true;
             checkDbReady();
-        }, (error) => {
-            console.error("Fehler beim Laden der Fragen: ", error);
-        });
+        }, (error) => console.error("Fehler beim Laden der Fragen: ", error));
         
         // ===================================================================================
-        // RENDER FUNCTIONS (Logik bleibt gleich)
+        // RENDER FUNCTIONS
         // ===================================================================================
         function render() {
-            if (!state.dbReady) return; // Nicht rendern, bevor die Daten da sind
+            if (!state.dbReady) return;
             appContainer.innerHTML = '';
             const header = document.createElement('header');
             header.innerHTML = `
                 <div class="flex justify-between items-center mb-8">
-                    <h1 class="text-2xl md:text-3xl">INFO-MASTER</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold">INFO-MASTER</h1>
                     <div>
-                        <button class="btn btn-secondary" data-nav="dashboard">Dashboard</button>
-                        <button class="btn btn-secondary ml-4" data-nav="crud">KATEGORIEN</button>
+                        <button class="btn" data-nav="dashboard">Dashboard</button>
+                        <button class="btn ml-4" data-nav="crud">Verwalten</button>
                     </div>
                 </div>
             `;
@@ -170,40 +288,29 @@
         function renderDashboard() {
             const container = document.createElement('div');
             container.innerHTML = `<h2 class="text-xl mb-6">Wähle dein Level:</h2>`;
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+            state.categories.forEach(cat => {
+                const catQuestions = state.questions.filter(q => q.category_id === cat.id);
+                const progressPercentage = 50; // Beispielwert
 
-            if (state.categories.length === 0 && state.questions.length === 0) {
-                 container.innerHTML += `<p class="mt-4">Willkommen! Es sind noch keine Inhalte vorhanden. Gehe zum 'KATEGORIEN', um deine erste Kategorie und Frage zu erstellen!</p>`;
-            } else if (state.categories.length === 0) {
-                container.innerHTML += `<p>Noch keine Kategorien erstellt. Gehe zum 'KATEGORIEN', um welche hinzuzufügen!</p>`;
-            } else {
-                const grid = document.createElement('div');
-                grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
-                state.categories.forEach(cat => {
-                    const catQuestions = state.questions.filter(q => q.category_id === cat.id);
-                    const learnedCount = catQuestions.filter(q => state.userProgress[q.id] && state.userProgress[q.id].interval_days > 0).length;
-                    const progressPercentage = catQuestions.length > 0 ? Math.round((learnedCount / catQuestions.length) * 100) : 0;
-
-                    const card = document.createElement('div');
-                    card.className = 'pixel-border p-6 flex flex-col justify-between';
-                    card.innerHTML = `
-                        <div>
-                            <h3 class="text-lg mb-2">${cat.name}</h3>
-                            <p class="text-sm mb-4">${cat.description || 'Keine Beschreibung.'}</p>
-                            <p class="text-xs mb-2">${catQuestions.length} Fragen</p>
-                        </div>
-                        <div>
-                            <div class="w-full bg-gray-300 h-6 border-2 border-black mb-4">
-                                <div class="bg-green-500 h-full text-center text-white text-xs leading-6" style="width: ${progressPercentage}%">${progressPercentage}%</div>
-                            </div>
-                            <button class="btn btn-primary w-full" data-start-quiz="${cat.id}" ${catQuestions.length === 0 ? 'disabled' : ''}>
-                                ${catQuestions.length === 0 ? 'Keine Fragen' : 'Starten!'}
-                            </button>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-                container.appendChild(grid);
-            }
+                const card = document.createElement('div');
+                card.className = 'glass-ui p-6 flex flex-col justify-between';
+                card.innerHTML = `
+                    <div>
+                        <h3 class="text-lg mb-2">${cat.name}</h3>
+                        <p class="text-sm text-gray-300 mb-4">${cat.description || 'Keine Beschreibung.'}</p>
+                        <p class="text-xs text-gray-400 mb-2">${catQuestions.length} Fragen</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary w-full" data-start-quiz="${cat.id}" ${catQuestions.length === 0 ? 'disabled' : ''}>
+                            ${catQuestions.length === 0 ? 'Keine Fragen' : 'Starten!'}
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            container.appendChild(grid);
             appContainer.appendChild(container);
         }
 
@@ -216,23 +323,43 @@
             const question = quiz.queue[quiz.currentQuestionIndex];
             const container = document.createElement('div');
             container.id = 'quiz-container';
-            container.className = 'pixel-border p-6';
+            container.className = 'glass-ui p-6';
             const sessionProgress = Math.round(((quiz.currentQuestionIndex) / quiz.queue.length) * 100);
             let questionHTML = `
                 <div class="mb-4">
-                    <p class="text-sm text-gray-600">Frage ${quiz.currentQuestionIndex + 1} von ${quiz.queue.length}</p>
-                    <div class="w-full bg-gray-300 h-4 border-2 border-black my-2">
-                        <div class="bg-blue-500 h-full" style="width: ${sessionProgress}%"></div>
+                    <p class="text-sm text-gray-400">Frage ${quiz.currentQuestionIndex + 1} von ${quiz.queue.length}</p>
+                    <div class="progress-bar-container my-2">
+                        <div class="progress-bar-fill" style="width: ${sessionProgress}%"></div>
                     </div>
                 </div>
                 <h3 class="text-lg mb-6">${question.content.prompt}</h3>
             `;
             switch (question.question_type) {
                 case 'mcq':
-                    questionHTML += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">${question.content.options.map((opt, index) => `<button class="btn btn-secondary text-left p-4" data-answer-mcq="${index}">${opt}</button>`).join('')}</div>`;
+                    // KORREKTUR: Antworten mischen
+                    const shuffledOptions = question.content.options
+                        .map((option, originalIndex) => ({ option, originalIndex }))
+                        .sort(() => Math.random() - 0.5);
+
+                    questionHTML += `<div id="mcq-answers" class="grid grid-cols-1 md:grid-cols-2 gap-4">${shuffledOptions.map(({option, originalIndex}) => `
+                        <button class="interactive-btn" data-answer-index="${originalIndex}">
+                            <div class="answer-btn p-4 text-left font-semibold">${option}</div>
+                        </button>
+                    `).join('')}</div>`;
+                    questionHTML += `
+                        <div id="quiz-actions" class="mt-6 text-right">
+                            <button id="submit-mcq-btn" class="btn btn-primary hidden">Abgeben</button>
+                            <button id="next-question-btn" class="btn btn-primary hidden">Weiter</button>
+                        </div>
+                    `;
                     break;
                 case 'code_completion':
-                    questionHTML += `<div><pre class="bg-gray-800 text-white p-4 mb-4 text-sm">${question.content.starter_code}</pre><textarea id="code-input" class="code-editor" placeholder="Dein Code hier..."></textarea><div class="mt-4 flex justify-end"><button class="btn btn-primary" id="submit-code">Lösung prüfen</button></div></div>`;
+                    questionHTML += `<div><pre class="bg-black/20 p-4 mb-4 text-sm rounded-md">${question.content.starter_code}</pre><textarea id="code-input" class="code-editor" placeholder="Dein Code hier..."></textarea>
+                    <div id="quiz-actions" class="mt-4 flex justify-end">
+                        <button class="btn btn-primary" id="submit-code">Lösung prüfen</button>
+                    </div>
+                    <div id="solution-feedback" class="mt-4"></div>
+                    </div>`;
                     break;
             }
             container.innerHTML = questionHTML;
@@ -241,23 +368,23 @@
 
         function renderQuizComplete() {
             const container = document.createElement('div');
-            container.className = 'pixel-border p-8 text-center';
-            container.innerHTML = `<h2 class="text-2xl mb-4">Level geschafft!</h2><p class="mb-6">Gute Arbeit! Du hast alle Fragen für diese Sitzung beantwortet.</p>${state.activeQuiz.mistakes.length > 0 ? `<h3 class="text-lg mb-2">Fragen zur Wiederholung:</h3><ul class="mb-6 text-left list-disc list-inside">${[...new Set(state.activeQuiz.mistakes.map(q => q.content.prompt))].map(prompt => `<li>${prompt}</li>`).join('')}</ul>` : '<p class="mb-6 text-green-600">Du hast keine Fehler gemacht!</p>'}<button class="btn btn-primary" data-nav="dashboard">Zurück zum Dashboard</button>`;
+            container.className = 'glass-ui p-8 text-center';
+            container.innerHTML = `<h2 class="text-2xl mb-4">Level geschafft!</h2><p class="mb-6">Gute Arbeit! Du hast alle Fragen für diese Sitzung beantwortet.</p><button class="btn btn-primary" data-nav="dashboard">Zurück zum Dashboard</button>`;
             appContainer.appendChild(container);
         }
 
         function renderCrud() {
             const container = document.createElement('div');
-            container.innerHTML = `<div class="flex justify-between items-center mb-6"><h2 class="text-xl">KATEGORIEN der Fragen</h2><button id="add-category-btn" class="btn btn-primary">Neue Kategorie</button></div>`;
+            container.innerHTML = `<div class="flex justify-between items-center mb-6"><h2 class="text-xl">Inhalte verwalten</h2><button id="add-category-btn" class="btn btn-primary">Neue Kategorie</button></div>`;
             state.categories.forEach(cat => {
                 const catSection = document.createElement('div');
-                catSection.className = 'pixel-border p-4 mb-6';
-                catSection.innerHTML = `<div class="flex justify-between items-center mb-4"><h3 class="text-lg">${cat.name}</h3><div><button class="btn btn-secondary text-xs" data-add-question="${cat.id}">Frage +</button><button class="btn btn-error text-xs ml-2" data-delete-category="${cat.id}">X</button></div></div>`;
+                catSection.className = 'glass-ui p-4 mb-6';
+                catSection.innerHTML = `<div class="flex justify-between items-center mb-4"><h3 class="text-lg">${cat.name}</h3><div><button class="btn" data-add-question="${cat.id}">Frage +</button><button class="btn btn-error text-xs ml-2" data-delete-category="${cat.id}">X</button></div></div>`;
                 const questionsList = document.createElement('ul');
                 state.questions.filter(q => q.category_id === cat.id).forEach(q => {
                     const li = document.createElement('li');
-                    li.className = 'flex justify-between items-center p-2 border-b border-gray-300';
-                    li.innerHTML = `<span>${q.content.prompt.substring(0, 50)}...</span><div><button class="btn btn-secondary text-xs" data-edit-question="${q.id}">Edit</button><button class="btn btn-error text-xs ml-2" data-delete-question="${q.id}">X</button></div>`;
+                    li.className = 'flex justify-between items-center p-2 border-b border-white/10';
+                    li.innerHTML = `<span>${q.content.prompt.substring(0, 50)}...</span><div><button class="btn text-xs" data-edit-question="${q.id}">Edit</button><button class="btn btn-error text-xs ml-2" data-delete-question="${q.id}">X</button></div>`;
                     questionsList.appendChild(li);
                 });
                 catSection.appendChild(questionsList);
@@ -275,15 +402,14 @@
             modalContainer.innerHTML = '';
             modalContainer.classList.remove('hidden');
             const formContainer = document.createElement('div');
-            formContainer.className = 'pixel-border p-8 w-full max-w-2xl max-h-full overflow-y-auto';
+            formContainer.className = 'glass-ui p-8 w-full max-w-2xl max-h-full overflow-y-auto';
             let formHTML = '';
             if (state.crud.editingCategory) {
                 const cat = state.crud.editingCategory;
-                formHTML = `<h3 class="text-xl mb-4">${cat.id ? 'Kategorie bearbeiten' : 'Neue Kategorie erstellen'}</h3><form id="category-form"><div class="mb-4"><label for="cat-name" class="block mb-1">Name</label><input type="text" id="cat-name" class="w-full p-2 border-2 border-black" value="${cat.name || ''}" required></div><div class="mb-4"><label for="cat-desc" class="block mb-1">Beschreibung</label><textarea id="cat-desc" class="w-full p-2 border-2 border-black">${cat.description || ''}</textarea></div><div class="flex justify-end gap-4"><button type="button" id="cancel-modal" class="btn btn-secondary">Abbrechen</button><button type="submit" class="btn btn-primary">Speichern</button></div></form>`;
+                formHTML = `<h3 class="text-xl mb-4">${cat.id ? 'Kategorie bearbeiten' : 'Neue Kategorie'}</h3><form id="category-form"><div class="mb-4"><label for="cat-name" class="block mb-1">Name</label><input type="text" id="cat-name" value="${cat.name || ''}" required></div><div class="mb-4"><label for="cat-desc" class="block mb-1">Beschreibung</label><textarea id="cat-desc">${cat.description || ''}</textarea></div><div class="flex justify-end gap-4"><button type="button" id="cancel-modal" class="btn">Abbrechen</button><button type="submit" class="btn btn-primary">Speichern</button></div></form>`;
             } else if (state.crud.editingQuestion) {
                 const q = state.crud.editingQuestion;
-                const isNew = !q.id;
-                formHTML = `<h3 class="text-xl mb-4">${isNew ? 'Neue Frage erstellen' : 'Frage bearbeiten'}</h3><form id="question-form"><div class="mb-4"><label for="q-type" class="block mb-1">Fragetyp</label><select id="q-type" class="w-full p-2 border-2 border-black"><option value="mcq" ${q.question_type === 'mcq' ? 'selected' : ''}>Multiple Choice</option><option value="code_completion" ${q.question_type === 'code_completion' ? 'selected' : ''}>Code-Vervollständigung</option></select></div><div id="q-content-fields"></div><div class="flex justify-end gap-4 mt-6"><button type="button" id="cancel-modal" class="btn btn-secondary">Abbrechen</button><button type="submit" class="btn btn-primary">Speichern</button></div></form>`;
+                formHTML = `<h3 class="text-xl mb-4">${q.id ? 'Frage bearbeiten' : 'Neue Frage'}</h3><form id="question-form"><div class="mb-4"><label for="q-type" class="block mb-1">Fragetyp</label><select id="q-type"><option value="mcq" ${q.question_type === 'mcq' ? 'selected' : ''}>Multiple Choice</option><option value="code_completion" ${q.question_type === 'code_completion' ? 'selected' : ''}>Code-Vervollständigung</option></select></div><div id="q-content-fields"></div><div class="flex justify-end gap-4 mt-6"><button type="button" id="cancel-modal" class="btn">Abbrechen</button><button type="submit" class="btn btn-primary">Speichern</button></div></form>`;
             }
             formContainer.innerHTML = formHTML;
             modalContainer.appendChild(formContainer);
@@ -294,75 +420,146 @@
             const q = state.crud.editingQuestion;
             const container = document.getElementById('q-content-fields');
             if (!container) return;
-            let fieldsHTML = `<div class="mb-4"><label for="q-prompt" class="block mb-1">Frage / Aufforderung</label><textarea id="q-prompt" class="w-full p-2 border-2 border-black" required>${q.content?.prompt || ''}</textarea></div>`;
+            let fieldsHTML = `<div class="mb-4"><label for="q-prompt" class="block mb-1">Frage / Aufforderung</label><textarea id="q-prompt" required>${q.content?.prompt || ''}</textarea></div>`;
             const type = document.getElementById('q-type')?.value || q.question_type;
             if (type === 'mcq') {
                 const options = q.content?.options || ['', '', '', ''];
-                const correct_index = q.content?.correct_index ?? -1;
-                fieldsHTML += `${options.map((opt, i) => `<div class="flex items-center mb-2"><input type="radio" name="correct_answer" value="${i}" id="radio-${i}" class="mr-2" ${correct_index === i ? 'checked' : ''} required><input type="text" class="w-full p-2 border-2 border-black q-option" value="${opt}" placeholder="Antwort ${i+1}"></div>`).join('')}<div class="mb-4"><label for="q-explanation" class="block mb-1">Erklärung</label><textarea id="q-explanation" class="w-full p-2 border-2 border-black">${q.content?.explanation || ''}</textarea></div>`;
+                const correct_indices = q.content?.correct_indices || [];
+                fieldsHTML += `<h4>Antworten (mehrere richtig möglich)</h4>${options.map((opt, i) => `<div class="flex items-center mb-2"><input type="checkbox" name="correct_answer" value="${i}" id="check-${i}" class="mr-2" ${correct_indices.includes(i) ? 'checked' : ''}><input type="text" class="w-full q-option" value="${opt}" placeholder="Antwort ${i+1}"></div>`).join('')}`;
             } else if (type === 'code_completion') {
-                fieldsHTML += `<div class="mb-4"><label for="q-starter-code" class="block mb-1">Start-Code</label><textarea id="q-starter-code" class="w-full p-2 border-2 border-black code-editor">${q.content?.starter_code || ''}</textarea></div><div class="mb-4"><label for="q-solution" class="block mb-1">Musterlösung</label><textarea id="q-solution" class="w-full p-2 border-2 border-black code-editor">${q.content?.solution || ''}</textarea></div>`;
+                fieldsHTML += `<div class="mb-4"><label for="q-starter-code" class="block mb-1">Start-Code</label><textarea id="q-starter-code" class="code-editor">${q.content?.starter_code || ''}</textarea></div><div class="mb-4"><label for="q-solution" class="block mb-1">Musterlösung</label><textarea id="q-solution" class="code-editor">${q.content?.solution || ''}</textarea></div>`;
             }
             container.innerHTML = fieldsHTML;
         }
 
         // ===================================================================================
-        // EVENT HANDLERS & LOGIC (mit Firestore-Integration)
+        // QUIZ LOGIC
+        // ===================================================================================
+        function handleAnswer(isCorrect) {
+            if (!isCorrect) {
+                const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
+                const reinsertIndex = Math.min(state.activeQuiz.currentQuestionIndex + 3, state.activeQuiz.queue.length);
+                state.activeQuiz.queue.splice(reinsertIndex, 0, question);
+                console.log(`Frage "${question.content.prompt.substring(0,20)}..." falsch. Wird an Position ${reinsertIndex} erneut eingefügt.`);
+            }
+            state.activeQuiz.currentQuestionIndex++;
+            render();
+        }
+
+        // ===================================================================================
+        // EVENT HANDLERS
         // ===================================================================================
         document.body.addEventListener('click', async e => {
+            // Navigation
             if (e.target.matches('[data-nav]')) { state.currentPage = e.target.dataset.nav; render(); }
             if (e.target.matches('[data-start-quiz]')) {
                 const categoryId = e.target.dataset.startQuiz;
                 let questionsForCategory = state.questions.filter(q => q.category_id === categoryId);
-                for (let i = questionsForCategory.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[questionsForCategory[i], questionsForCategory[j]] = [questionsForCategory[j], questionsForCategory[i]]; }
                 state.activeQuiz = { categoryId, queue: questionsForCategory, currentQuestionIndex: 0, mistakes: [] };
                 state.currentPage = 'quiz';
                 render();
             }
-            if (e.target.matches('[data-answer-mcq]')) { handleAnswer(parseInt(e.target.dataset.answerMcq) === state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex].content.correct_index); }
-            if (e.target.id === 'submit-code') {
+
+            // MCQ Antwort auswählen
+            const answerButton = e.target.closest('.interactive-btn');
+            if (answerButton && answerButton.hasAttribute('data-answer-index')) {
+                answerButton.classList.toggle('chosen');
+                const anyChosen = document.querySelector('.interactive-btn.chosen');
+                document.getElementById('submit-mcq-btn').classList.toggle('hidden', !anyChosen);
+            }
+
+            // MCQ Abgeben
+            if (e.target.id === 'submit-mcq-btn') {
                 const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
+                const correctIndices = new Set(question.content.correct_indices || [question.content.correct_index]);
+                const chosenButtons = document.querySelectorAll('.interactive-btn.chosen');
+                const chosenIndices = new Set(Array.from(chosenButtons).map(btn => parseInt(btn.dataset.answerIndex)));
+
+                let is100PercentCorrect = chosenIndices.size === correctIndices.size && [...chosenIndices].every(index => correctIndices.has(index));
+                
+                if (!is100PercentCorrect) {
+                    // Die eigentliche Wiederholungslogik wird jetzt von handleAnswer() übernommen
+                    console.log(`MCQ Antwort war nicht 100% korrekt.`);
+                }
+                
+                document.querySelectorAll('.interactive-btn').forEach(btn => {
+                    btn.classList.remove('chosen');
+                    btn.disabled = true;
+                    const innerDiv = btn.querySelector('.answer-btn');
+                    const index = parseInt(btn.dataset.answerIndex);
+                    const isCorrect = correctIndices.has(index);
+                    const isChosen = chosenIndices.has(index);
+
+                    if (isChosen && isCorrect) {
+                        innerDiv.classList.add('richtig-gewaehlt');
+                    } else if (isChosen && !isCorrect) {
+                        innerDiv.classList.add('falsch-gewaehlt');
+                    } else if (isCorrect && !isChosen) {
+                        innerDiv.classList.add('richtig-nicht-gewaehlt');
+                    }
+                });
+                
+                e.target.classList.add('hidden');
+                document.getElementById('next-question-btn').classList.remove('hidden');
+            }
+
+            // Code-Vervollständigung prüfen
+            if (e.target.id === 'submit-code') {
                 const userInput = document.getElementById('code-input').value.trim();
-                const solution = question.content.solution.trim();
+                const solution = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex].content.solution.trim();
                 const isIdentical = userInput === solution;
 
-                const quizContainer = document.getElementById('quiz-container');
-                let solutionHTML = `
-                    <div class="mt-6 p-4 border-t-4 border-black">
-                        <h4 class="font-bold mb-2">Deine Lösung:</h4>
-                        <pre class="bg-gray-200 p-2 mb-4 text-sm">${userInput || '(Keine Eingabe)'}</pre>
-                        <h4 class="font-bold mb-2">Musterlösung:</h4>
-                        <pre class="bg-gray-200 p-2 mb-4 text-sm">${solution}</pre>
+                const feedbackContainer = document.getElementById('solution-feedback');
+                let feedbackHTML = `<div class="p-4 rounded-lg bg-black/20 mt-4">`;
+                if(isIdentical) {
+                    feedbackHTML += `<h3 class="text-xl font-bold text-center text-green-400 mb-4">KORREKT!</h3>`;
+                } else {
+                    feedbackHTML += `<h3 class="text-xl font-bold text-center text-yellow-400 mb-4">Automatische Prüfung: Abweichung festgestellt.</h3>`;
+                }
+                feedbackHTML += `
+                    <h4 class="font-bold mb-2">Deine Lösung:</h4>
+                    <pre class="text-sm bg-black/30 p-2 rounded-md">${userInput || '(Keine Eingabe)'}</pre>
+                    <hr class="my-2 border-white/10">
+                    <h4 class="font-bold mb-2">Musterlösung:</h4>
+                    <pre class="text-sm bg-black/30 p-2 rounded-md">${solution}</pre>
                 `;
-
-                if (isIdentical) {
-                    solutionHTML += `
-                        <p class="text-center my-4 font-bold text-green-600 text-xl">KORREKT!</p>
+                if (!isIdentical) {
+                    feedbackHTML += `
+                        <p class="text-center my-4">Ist deine Lösung trotzdem logisch richtig?</p>
                         <div class="flex justify-center gap-4">
-                            <button class="btn btn-success" id="eval-continue">Weiter</button>
+                            <button id="code-continue-wrong" class="btn btn-error">Als Falsch werten & Weiter</button>
+                            <button id="code-continue-correct" class="btn btn-primary">Als Richtig werten & Weiter</button>
                         </div>
                     `;
                 } else {
-                    solutionHTML += `
-                        <p class="text-center my-4">Dein Code ist anders. Ist deine Lösung trotzdem logisch richtig?</p>
-                        <div class="flex justify-center gap-4">
-                            <button class="btn btn-error" id="self-eval-wrong">Falsch</button>
-                            <button class="btn btn-success" id="self-eval-correct">Richtig</button>
-                        </div>
-                    `;
+                     feedbackHTML += `<div class="text-center mt-4"><button id="code-continue-correct" class="btn btn-primary">Weiter</button></div>`;
                 }
-                solutionHTML += `</div>`;
-                quizContainer.innerHTML += solutionHTML;
-                e.target.style.display = 'none'; // Verstecke den ursprünglichen Button
+                feedbackHTML += `</div>`;
+                feedbackContainer.innerHTML = feedbackHTML;
+                e.target.classList.add('hidden');
             }
-            if (e.target.id === 'eval-continue') handleAnswer(true);
-            if (e.target.id === 'self-eval-correct') handleAnswer(true);
-            if (e.target.id === 'self-eval-wrong') handleAnswer(false);
+
+            // Nächste Frage
+            if (e.target.id === 'next-question-btn') {
+                 // Diese Logik wird nur für MCQ benötigt, da dort die Korrektheit schon feststeht.
+                const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
+                const correctIndices = new Set(question.content.correct_indices || [question.content.correct_index]);
+                const chosenButtons = document.querySelectorAll('.falsch-gewaehlt, .richtig-nicht-gewaehlt');
+                const isCorrect = chosenButtons.length === 0;
+                handleAnswer(isCorrect);
+            }
+            if (e.target.id === 'code-continue-correct') {
+                handleAnswer(true);
+            }
+            if (e.target.id === 'code-continue-wrong') {
+                handleAnswer(false);
+            }
+
+            // CRUD-Aktionen
             if (e.target.id === 'add-category-btn') { state.crud.editingCategory = {}; state.crud.editingQuestion = null; renderCrudModal(); }
             if (e.target.matches('[data-add-question]')) { state.crud.editingQuestion = { category_id: e.target.dataset.addQuestion }; state.crud.editingCategory = null; renderCrudModal(); }
             if (e.target.matches('[data-edit-question]')) {
-                const questionId = e.target.dataset.editQuestion;
-                state.crud.editingQuestion = JSON.parse(JSON.stringify(state.questions.find(q => q.id === questionId)));
+                state.crud.editingQuestion = JSON.parse(JSON.stringify(state.questions.find(q => q.id === e.target.dataset.editQuestion)));
                 state.crud.editingCategory = null;
                 renderCrudModal();
             }
@@ -371,16 +568,14 @@
                 const catId = e.target.dataset.deleteCategory;
                 if (confirm('Sicher, dass du diese Kategorie und ALLE ihre Fragen löschen willst?')) {
                     const batch = writeBatch(db);
-                    const questionsToDelete = state.questions.filter(q => q.category_id === catId);
-                    questionsToDelete.forEach(q => batch.delete(doc(db, "questions", q.id)));
+                    state.questions.filter(q => q.category_id === catId).forEach(q => batch.delete(doc(db, "questions", q.id)));
                     batch.delete(doc(db, "categories", catId));
                     await batch.commit();
                 }
             }
             if (e.target.matches('[data-delete-question]')) {
-                const qId = e.target.dataset.deleteQuestion;
                 if (confirm('Sicher, dass du diese Frage löschen willst?')) {
-                    await deleteDoc(doc(db, "questions", qId));
+                    await deleteDoc(doc(db, "questions", e.target.dataset.deleteQuestion));
                 }
             }
         });
@@ -388,10 +583,8 @@
         document.body.addEventListener('submit', async e => {
             e.preventDefault();
             if (e.target.id === 'category-form') {
-                const name = document.getElementById('cat-name').value;
-                const description = document.getElementById('cat-desc').value;
                 const cat = state.crud.editingCategory;
-                const data = { name, description };
+                const data = { name: document.getElementById('cat-name').value, description: document.getElementById('cat-desc').value };
                 if (cat.id) { await setDoc(doc(db, "categories", cat.id), data); } 
                 else { await addDoc(collection(db, "categories"), data); }
                 document.getElementById('crud-modal').classList.add('hidden');
@@ -405,9 +598,12 @@
                 };
                 if (data.question_type === 'mcq') {
                     data.content.options = Array.from(document.querySelectorAll('.q-option')).map(inp => inp.value);
-                    data.content.correct_index = parseInt(document.querySelector('input[name="correct_answer"]:checked').value);
-                    data.content.explanation = document.getElementById('q-explanation').value;
-                } else if (data.question_type === 'code_completion') {
+                    data.content.correct_indices = Array.from(document.querySelectorAll('input[name="correct_answer"]:checked')).map(cb => parseInt(cb.value));
+                    if (data.content.correct_indices.length === 0) {
+                        alert("Bitte mindestens eine korrekte Antwort markieren.");
+                        return;
+                    }
+                } else {
                     data.content.starter_code = document.getElementById('q-starter-code').value;
                     data.content.solution = document.getElementById('q-solution').value;
                 }
@@ -416,78 +612,9 @@
                 document.getElementById('crud-modal').classList.add('hidden');
             }
         });
-        // ===================================================================================
-        // NEU: Event Listener für spezielle Tasten im Code-Editor
-        // ===================================================================================
-        document.body.addEventListener('keydown', function(e) {
-            // Diese Logik wird NUR ausgeführt, wenn du im Code-Editor mit der ID 'code-input' tippst.
-            if (e.target.id !== 'code-input') {
-                return;
-            }
         
-            // 1. Funktionalität für die Tab-Taste (Einrückung statt Fokuswechsel)
-            if (e.key === 'Tab') {
-                // Verhindert das Standardverhalten (zum nächsten Element springen)
-                e.preventDefault(); 
-        
-                const start = e.target.selectionStart;
-                const end = e.target.selectionEnd;
-        
-                // Fügt 4 Leerzeichen an der aktuellen Cursor-Position ein
-                e.target.value = e.target.value.substring(0, start) +
-                    "    " +
-                    e.target.value.substring(end);
-        
-                // Setzt den Cursor an die richtige Stelle nach den 4 Leerzeichen
-                e.target.selectionStart = e.target.selectionEnd = start + 4;
-            }
-        
-            // 2. Funktionalität für die Enter-Taste (Automatische Einrückung nach einem Doppelpunkt)
-            if (e.key === 'Enter') {
-                // Findet die aktuelle Zeile, in der sich der Cursor befindet
-                const textLines = e.target.value.substring(0, e.target.selectionStart).split("\n");
-                const currentLine = textLines[textLines.length - 1];
-        
-                // Prüft, ob die Zeile mit einem Doppelpunkt endet (z.B. bei def, if, for, class)
-                if (currentLine.trim().endsWith(':')) {
-                    e.preventDefault(); // Verhindert den normalen Zeilenumbruch
-                    
-                    const start = e.target.selectionStart;
-                    const end = e.target.selectionEnd;
-                    const indent = "\n    "; // Ein Zeilenumbruch gefolgt von 4 Leerzeichen
-        
-                    // Fügt den Zeilenumbruch mit der Einrückung ein
-                    e.target.value = e.target.value.substring(0, start) +
-                        indent +
-                        e.target.value.substring(end);
-        
-                    // Setzt den Cursor an die neue Position in der eingerückten Zeile
-                    e.target.selectionStart = e.target.selectionEnd = start + indent.length;
-                }
-            }
-        });
-
         document.body.addEventListener('change', e => { if (e.target.id === 'q-type') { state.crud.editingQuestion.question_type = e.target.value; const promptText = document.getElementById('q-prompt')?.value || ''; if (!state.crud.editingQuestion.content) state.crud.editingQuestion.content = {}; state.crud.editingQuestion.content.prompt = promptText; renderQuestionFields(); } });
 
-        function handleAnswer(isCorrect) {
-            const quizContainer = document.getElementById('quiz-container');
-            const question = state.activeQuiz.queue[state.activeQuiz.currentQuestionIndex];
-            
-            if (!isCorrect) {
-                // Falsche Antwort: Zur Wiederholung vormerken und später wieder einfügen
-                state.activeQuiz.mistakes.push(question);
-                const reinsertIndex = Math.min(state.activeQuiz.currentQuestionIndex + 3, state.activeQuiz.queue.length);
-                state.activeQuiz.queue.splice(reinsertIndex, 0, question);
-                console.log(`Frage ${question.id} falsch. Wird an Position ${reinsertIndex} erneut eingefügt.`);
-            }
-
-            quizContainer.classList.add(isCorrect ? 'correct-flash-anim' : 'shake-anim');
-            
-            setTimeout(() => {
-                state.activeQuiz.currentQuestionIndex++;
-                render();
-            }, 700);
-        }
     </script>
 </body>
 </html>
